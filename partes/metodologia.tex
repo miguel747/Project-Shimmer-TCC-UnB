@@ -7,19 +7,47 @@
 
 	\subsection{Conceitos Iniciais}
 	
-	Os filtros digitais não contém uma implementação física em si, diferentemente dos filtros analógicos constituídos, geralmente, de associação de resistores e capacitores. Eles são construídos através de algoritmos.
-	
-	Para que isso possa ocorrer é necessário que o sinal de áudio (analógico) seja devidamente convertido em um sinal digital. esse sinal portanto convolui por um algoritmo de filtro adequado.
-	
-	De maneira geral, o projeto de um filtro consite em obter os coeficientes para os filtros. Isso ~e realizado através de uma equação chamada de equação das diferenças. O processo pode ser simplesmente realizado pela equação:
-	
-	\begin{equation}
-		Saida = \sum_{1}^{n} Coeficiente_n do filtro * Amostra_n
-	\end{equation}
-	
-	
+		Os filtros digitais não contém uma implementação física em si, diferentemente dos filtros analógicos constituídos, geralmente, de associação de resistores e capacitores. Eles são construídos através de algoritmos.
+		
+		Para que isso possa ocorrer é necessário que o sinal de áudio (analógico) seja devidamente convertido em um sinal digital. esse sinal portanto convolui por um algoritmo de filtro adequado.
+		
+		De maneira geral, o projeto de um filtro consite em obter os coeficientes para os filtros. Isso é realizado através de uma equação chamada de equação das diferenças. O processo pode ser simplesmente realizado pela equação (\ref{eq-filtro-bas}):
+		
+		\begin{equation}
+			\text{Saida} = \sum_{1}^{n} \text{Coeficiente}_n \text{do filtro} * \text{Amostra}_n
+			\label{eq-filtro-bas}
+		\end{equation}
+		
+		Assim, o contexto de um filtro digital estará associado a equações de diferenças (ou funções de transferência no domínio Z) cujo parâmetros (coeficientes) serão calculados com o objetivo de discriminar (extrair, atenuar, etc.) determinadas componentes espectrais presentes em um sinal ou uma informação no mesmo sentido dos filtros analógicos, sem a necessidade de um circuito (\textit{hardware}) adicional. Em outras palavras, o filtro digital será uma rotina adicional agregada ao algoritmo responsável pela realização do sistema proposto em questão.
+		
 	\subsection{Filtros IIR}
+		
+		Os filtros digitais de resposta infinita ao impulso (\textit{Infinite Impulse Response - IIR}), também conhecidos como filtros recursivos ou autorregressivos, são modelados pela equação de diferença (\ref{eq1-iir}) ou pela função de transferência (\ref{eq2-iir-tf}), em que basicamente os valores dos coeficientes dos modelos define a natureza do filtro (passa-baixa; passa-alta; passa-faixa; rejeita-faixa).
+		
+		A denominação de IIR se deve que a saída do modelo decai para um valor nulo em um tempo infinito em resposta a um impulso aplicado na entrada filtro correspondente.
+		
+		\begin{equation}
+			y(k) = \frac{1}{a_0}\left(\sum_{m=0}^{M}b_mx(k-m)-\sum_{n=1}^{N} a_ny(k-n)\right)
+			\label{eq1-iir}
+		\end{equation}
+		
+		\begin{equation}
+			D(z) = \frac{y(z)}{x(z)} = \frac{b_0 + b_1z^{-1}+...+ b_mz^{-m}}{a_1z^{-1}+ a_nz^{-n}}
+			\label{eq2-iir-tf}
+		\end{equation}
+		
+		Resumidamente, a forma usual de calcular os coeficientes de um filtro digital IIR consiste em utilizar o modelo de um filtro analógico, e aplicar uma transformada Z via aproximação retangular ou trapezoidal\cite{Schlichthaerle2011}.
+		
+		
 	\subsection{Filtros FIR}
 	\subsection{Filtros Adaptativos}
+		Os filtros adaptativos são constituídos, geralmente, por estruturas FIR, em que os coeficientes dos modelos associados são modificados conforme um procedimento adaptativo. essa modalidade de filtro geralmente é empregada nos seguintes contextos (\textit{lista não exaustiva}):
+		
+		\begin{itemize}
+			\item Como procedimento alternativo na obtenção de valores dos coeficientes de um determinado filtro FIR, em que padrões de entrada e saída conhecidos são utilizados para estabelecer os valores dos coeficientes do filtro em questão;
+			\item Cancelamento ou redução de ecos/barulhos de um determinado ambiente;
+			\item Na modelagem de sistemas dinâmicos; e
+			\item Como modelagem básica de representações de redes neurais artificiais.
+		\end{itemize}
 
 \section{Ferramentas Computacionais}
