@@ -36,10 +36,18 @@
 			\label{eq2-iir-tf}
 		\end{equation}
 		
-		Resumidamente, a forma usual de calcular os coeficientes de um filtro digital IIR consiste em utilizar o modelo de um filtro analógico, e aplicar uma transformada Z via aproximação retangular ou trapezoidal\cite{Schlichthaerle2011}.
+		Resumidamente, a forma usual de calcular os coeficientes de um filtro digital IIR consiste em utilizar o modelo de um filtro analógico, e aplicar uma transformada Z via aproximação retangular ou trapezoidal \cite{Schlichthaerle2011}.
+		
+		Notoriamente, uma das vantagens na utilizacão dos filtros IIR é que eles resultam em comprimentos (quantidade de coeficientes) de filtro menor do que o filtro FIR correspondente, porém, esta melhoria é obtida às custas de distorção de fase e um transitório que não se limita a um intervalo de tempo finito \cite{Haykin1999}.
 		
 		
 	\subsection{Filtros FIR}
+	
+		\
+		
+		
+	
+	
 	\subsection{Filtros Adaptativos}
 		Os filtros adaptativos são constituídos, geralmente, por estruturas FIR, em que os coeficientes dos modelos associados são modificados conforme um procedimento adaptativo. essa modalidade de filtro geralmente é empregada nos seguintes contextos (\textit{lista não exaustiva}):
 		
@@ -49,5 +57,24 @@
 			\item Na modelagem de sistemas dinâmicos; e
 			\item Como modelagem básica de representações de redes neurais artificiais.
 		\end{itemize}
-
+	
+		A equação () representa o modelo de um filtro FIR, em que $W_m(k)$ denota os valores dos coeficientes do filtro em um instante de tempo $k$. 
+		
+		\begin{equation}
+			\label{eq1-filtroadap}
+			y(k) = \sum_{m=0}^{M} W_m(k)x(k-m)
+		\end{equation}
+		
+		A diferença ou erro $\epsilon(k)$ entre o valor de padrão desejado d(k) para a a resposta do filtro e a informação da saída atual $y(k)$ do modelo associado é expressa por:
+		
+		\begin{equation}
+			\label{eq2-filtroadap}
+			\epsilon(k) = d(k)- y(k)
+		\end{equation}
+		
+		Basicamente para ajustar os valores dos coeficientes de um filtro adaptativo tipicamente utiliza o método do gradiente para essa finalidade (fonte....), sendo o critério da somatória do erro quadrático de $\epsilon_(k)$ frequentemente utilizado na etapa de adaptação.
+		
+		Vale salientar, que alguns sistemas de comunicação de voz utilizam filtros adaptativos com o objetivo de cancelar ou reduzir ecos ou barulhos do ambiente. Nesse contexto, foi pensado inicialmente a utilização desse modelo de filtro para o projeto. No entanto, será explicado mais a frente a não adoção desse modelo, bem como pela utilização de um filtro FIR típico.
+		
+		
 \section{Ferramentas Computacionais}
