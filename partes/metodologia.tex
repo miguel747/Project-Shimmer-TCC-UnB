@@ -36,14 +36,26 @@
 			\label{eq2-iir-tf}
 		\end{equation}
 		
-		Resumidamente, a forma usual de calcular os coeficientes de um filtro digital IIR consiste em utilizar o modelo de um filtro analógico, e aplicar uma transformada Z via aproximação retangular ou trapezoidal \cite{Schlichthaerle2011}.
+		Resumidamente, a forma usual de calcular os coeficientes de um filtro digital IIR consiste em utilizar o modelo de um filtro analógico, e aplicar uma transformada Z via aproximação retangular ou trapezoidal \cite{Oppenhein1998}.
 		
-		Notoriamente, uma das vantagens na utilizacão dos filtros IIR é que eles resultam em comprimentos (quantidade de coeficientes) de filtro menor do que o filtro FIR correspondente, porém, esta melhoria é obtida às custas de distorção de fase e um transitório que não se limita a um intervalo de tempo finito \cite{Haykin1999}.
+		Notoriamente, uma das vantagens na utilizacão dos filtros IIR é que eles resultam em comprimentos (quantidade de coeficientes) de filtro menor do que o filtro FIR correspondente, porém, esta melhoria é obtida às custas de distorção de fase e um transitório que não se limita a um intervalo de tempo finito \cite{Roberts1987}.
 		
 		
 	\subsection{Filtros FIR}
 	
-
+	O lóbulo principal da janela retanular tem aproximadamente a metade da largura do lóbulo principal principal da janela Hamming;
+	
+	Os lóbulos laterais da janela Hamming, em relação ao lóbulo principal, são muitos reduzidos em comparação com os da janela retangular. Especificamente, o pico de amplitude do primeiro lõbulo lateral da janela retangular estã somente aproximadamente 13 dB abaixo do pico do lóbulo principal, ao passo que o valor correspondente para a janela Hamming é de aproximadamente 40 dB.
+	
+	É devido a esta último ponto que a janela Hamming reduz as oscilações na resposta em frequência de um filtro digital FIR. Todavia, há um preço a ser pago por esta melhoria, a saber, uma faixa de transição mais larga no espectro do filtro.\cite{haykin2001sinais}
+	
+		Vantagens:
+		\begin{itemize}
+			\item Um filtro não recursivo como o filtro FIR é inerentemente estável. Conforme pode ser visto na função de transferência ela é especificada em termos do zeros apenas no plano-z. Logo não há grandes preocupações em termos da escolha dos coeficientes que possam causar instabilidade no sistema, posto que seu LGR encontra-se estritamente dentro do semi-plano esquerdo do domínio-z.
+			\item O filtro FIR (resposta ao impulso) tem forma simétrica no seu espectro de frequência. Isso produz uma característica de fase linear ideal, ou seja, é equivalente a puramente um atraso temporal em todas as componentes de frequência passando pelo filtro. Em outras palavras, podemos dizer que o filtro FIR não tem \textit{distorção de fase}.
+		\end{itemize}
+	\cite{Lynn1998}
+	
 	\subsection{Filtros Adaptativos}
 		Os filtros adaptativos são constituídos, geralmente, por estruturas FIR, em que os coeficientes dos modelos associados são modificados conforme um procedimento adaptativo. essa modalidade de filtro geralmente é empregada nos seguintes contextos (\textit{lista não exaustiva}):
 		
