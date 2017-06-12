@@ -11,7 +11,7 @@
 		
 		Para que isso possa ocorrer é necessário que o sinal de áudio (analógico) seja devidamente convertido em um sinal digital. esse sinal portanto convolui por um algoritmo de filtro adequado.
 		
-		De maneira geral, o projeto de um filtro consite em obter os coeficientes para os filtros. Isso é realizado através de uma equação chamada de equação das diferenças. O processo pode ser simplesmente realizado pela equação (\ref{eq-filtro-bas}):
+		De maneira geral, o projeto de um filtro consiste em obter os coeficientes para os filtros. Isso é realizado através de uma equação chamada de equação das diferenças. O processo pode ser simplesmente realizado pela equação (\ref{eq-filtro-bas}):
 		
 		\begin{equation}
 			\text{Saida} = \sum_{1}^{n} \text{Coeficiente}_n \text{do filtro} * \text{Amostra}_n
@@ -38,16 +38,29 @@
 		
 		Resumidamente, a forma usual de calcular os coeficientes de um filtro digital IIR consiste em utilizar o modelo de um filtro analógico, e aplicar uma transformada Z via aproximação retangular ou trapezoidal \cite{Oppenhein1998}.
 		
-		Notoriamente, uma das vantagens na utilizacão dos filtros IIR é que eles resultam em comprimentos (quantidade de coeficientes) de filtro menor do que o filtro FIR correspondente, porém, esta melhoria é obtida às custas de distorção de fase e um transitório que não se limita a um intervalo de tempo finito \cite{Roberts1987}.
+		Notoriamente, uma das vantagens na utilização dos filtros IIR é que eles resultam em comprimentos (quantidade de coeficientes) de filtro menor do que o filtro FIR correspondente, porém, esta melhoria é obtida às custas de distorção de fase e um transitório que não se limita a um intervalo de tempo finito \cite{Roberts1987}.
 		
 		
 	\subsection{Filtros FIR}
-	
-	O lóbulo principal da janela retanular tem aproximadamente a metade da largura do lóbulo principal principal da janela Hamming;
-	
-	Os lóbulos laterais da janela Hamming, em relação ao lóbulo principal, são muitos reduzidos em comparação com os da janela retangular. Especificamente, o pico de amplitude do primeiro lõbulo lateral da janela retangular estã somente aproximadamente 13 dB abaixo do pico do lóbulo principal, ao passo que o valor correspondente para a janela Hamming é de aproximadamente 40 dB.
-	
-	É devido a esta último ponto que a janela Hamming reduz as oscilações na resposta em frequência de um filtro digital FIR. Todavia, há um preço a ser pago por esta melhoria, a saber, uma faixa de transição mais larga no espectro do filtro.\cite{haykin2001sinais}
+		
+		\begin{figure}[!htb]
+			\centering
+			\subfigure[\textbf{fluxo de sinais}]{
+			\includegraphics[scale=0.5]{./figuras/FIR-diagrama-fluxo-sinais.png}
+			\label{figura1-fir}}
+			\qquad
+			\subfigure[\textbf{diagrama de blocos}]{
+			\includegraphics[scale=0.5]{./figuras/FIR-diagrama-blocos.png}
+			\label{figura2-fir}}
+			\caption{Diagrama de fluxo de sinais e diagrama de blocos de um filtro FIR}
+			\label{fig01}	
+		\end{figure}
+		
+		O lóbulo principal da janela retangular tem aproximadamente a metade da largura do lóbulo principal da janela \textit{Hamming};
+		
+		Os lóbulos laterais da janela \textit{Hamming}, em relação ao lóbulo principal, são muitos reduzidos em comparação com os da janela retangular. Especificamente, o pico de amplitude do primeiro lóbulo lateral da janela retangular está somente aproximadamente 13 dB abaixo do pico do lóbulo principal, ao passo que o valor correspondente para a janela \textit{Hamming} é de aproximadamente 40 dB.
+		
+		É devido a esta último ponto que a janela \textit{Hamming} reduz as oscilações na resposta em frequência de um filtro digital FIR. Todavia, há um preço a ser pago por esta melhoria, a saber, uma faixa de transição mais larga no espectro do filtro.\cite{haykin2001sinais}
 	
 		Vantagens:
 		\begin{itemize}
@@ -84,6 +97,37 @@
 		
 		Vale salientar, que alguns sistemas de comunicação de voz utilizam filtros adaptativos com o objetivo de cancelar ou reduzir ecos ou barulhos do ambiente. Nesse contexto, foi pensado inicialmente a utilização desse modelo de filtro para o projeto. No entanto, será explicado mais a frente a não adoção desse modelo, bem como pela utilização de um filtro FIR típico.
 		
+	\subsection{Filtro Pente - \textit{Comb Filter}}
+		Em termos práticos \textit{comb filter} ou “filtro pente” é uma versão atrasada do mesmo sinal, causando uma  interferência construtiva ou destrutiva
+		
+		\begin{figure}[hbt]
+			\centering
+			\includegraphics[scale=0.5]{./figuras/Comb_filter_feedback.png}
+			\caption{Diagrama de Blocos da Estrutura de um Filtro Pente - \textit{Comb Filter}}
+			\label{fig01-combfilter}
+		\end{figure}
+		
+		Similarmente, a estrutura geral de um sistema de realimentação de um \textit{comb filter} pode ser mostrado na figura (\ref{fig01-combfilter}). Além disso pode ser descrito pela seguinte equação de diferenças (\ref{eq01-combfilter}):
+				
+		\begin{equation}
+			\label{eq01-combfilter}
+			y[n] = x[n] + \alpha y[n-K]
+		\end{equation}
+		
+		Se rearranjarmos os termos da equação para que todos as variáveis em $y$ fiquem do mesmo lado da equação e, na sequência, aplicamos a transformada Z em ambos os membros, teremos:
+		
+		\begin{equation}
+			\label{eq01-combfilter}
+			(1-\alpha z^{-K})Y(z) = X(z)
+		\end{equation}
+		
+		Finalmente temos a função de transferência correspondente ao sistema:
+		
+		\begin{equation}
+			\label{eq3-combfilter}
+			H(z) = \frac{Y(z)}{X(z)} = \frac{1}{1-\alpha z^{-K}} = \frac{z^K}{z^K-\alpha}
+		\end{equation}
+		
 \section{Conversão Digital Analógica}
 
 \section{Conversão Analógica Digital}
@@ -92,6 +136,6 @@
 	
 \section{Ferramentas Computacionais}
 
-	\subsection{Code Compose Studio}
+	\subsection{\textit{Code Compose Studio}}
 	
-	\subsection{WinFilter}
+	\subsection{\textit{WinFilter}}
