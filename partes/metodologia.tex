@@ -103,7 +103,7 @@
 		\begin{figure}[hbt]
 			\centering
 			\includegraphics[scale=0.5]{./figuras/Comb_filter_feedback.png}
-			\caption{Diagrama de Blocos da Estrutura de um Filtro Pente - \textit{Comb Filter}}
+			\caption{Filtro Pente - \textit{Comb Filter} - Forma de Realimentação}
 			\label{fig01-combfilter}
 		\end{figure}
 		
@@ -117,16 +117,34 @@
 		Se rearranjarmos os termos da equação para que todos as variáveis em $y$ fiquem do mesmo lado da equação e, na sequência, aplicamos a transformada Z em ambos os membros, teremos:
 		
 		\begin{equation}
-			\label{eq01-combfilter}
+			\label{eq02-combfilter}
 			(1-\alpha z^{-K})Y(z) = X(z)
 		\end{equation}
 		
-		Finalmente temos a função de transferência correspondente ao sistema:
+		Finalmente temos a função de transferência (\ref{eq03-combfilter}) correspondente ao sistema:
 		
 		\begin{equation}
-			\label{eq3-combfilter}
+			\label{eq03-combfilter}
 			H(z) = \frac{Y(z)}{X(z)} = \frac{1}{1-\alpha z^{-K}} = \frac{z^K}{z^K-\alpha}
 		\end{equation}
+		
+		Uma das formas de estimar a resposta de magnitude em função do valor do tempo de delay $K$ e fator de atenuação/ganho $\alpha$ é expressar $ H(z) $ em termos de módulo $|H(K,\alpha)|$, bem como, de maneira conveniente, utilizando uma substituição $ z = \epsilon^{j\theta} $.
+		
+		\begin{equation}
+			|H(K,\alpha,\theta)| = \frac{1}{\sqrt{(1+a^2) - 2\alpha \cos(\theta K)}}
+		\end{equation}
+		
+		
+		
+		
+		De maneira análoga o \textit{Comb Filter} também pode ser implementado no domínio do tempo. O diagrama de representação do sistema pode ser descrito pela equação ():
+		
+		\begin{equation}
+			y(t) = x(t) + \alpha x(t-\tau)
+			\label{eq05-combfilter}
+		\end{equation}
+		
+		
 		
 \section{Conversão Digital Analógica}
 
