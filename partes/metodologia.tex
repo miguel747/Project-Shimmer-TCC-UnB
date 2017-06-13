@@ -21,7 +21,7 @@
 		Assim, o contexto de um filtro digital estará associado a equações de diferenças (ou funções de transferência no domínio Z) cujo parâmetros (coeficientes) serão calculados com o objetivo de discriminar (extrair, atenuar, etc.) determinadas componentes espectrais presentes em um sinal ou uma informação no mesmo sentido dos filtros analógicos, sem a necessidade de um circuito (\textit{hardware}) adicional. Em outras palavras, o filtro digital será uma rotina adicional agregada ao algoritmo responsável pela realização do sistema proposto em questão.
 		
 	\subsection{Filtros IIR}
-		
+	\label{IIR-section}	
 		Os filtros digitais de resposta infinita ao impulso (\textit{Infinite Impulse Response - IIR}), também conhecidos como filtros recursivos ou autorregressivos, são modelados pela equação de diferença (\ref{eq1-iir}) ou pela função de transferência (\ref{eq2-iir-tf}), em que basicamente os valores dos coeficientes dos modelos define a natureza do filtro (passa-baixa; passa-alta; passa-faixa; rejeita-faixa).
 		
 		A denominação de IIR se deve que a saída do modelo decai para um valor nulo em um tempo infinito em resposta a um impulso aplicado na entrada filtro correspondente.
@@ -39,6 +39,8 @@
 		Resumidamente, a forma usual de calcular os coeficientes de um filtro digital IIR consiste em utilizar o modelo de um filtro analógico, e aplicar uma transformada Z via aproximação retangular ou trapezoidal \cite{Oppenhein1998}.
 		
 		Notoriamente, uma das vantagens na utilização dos filtros IIR é que eles resultam em comprimentos (quantidade de coeficientes) de filtro menor do que o filtro FIR correspondente, porém, esta melhoria é obtida às custas de distorção de fase e um transitório que não se limita a um intervalo de tempo finito \cite{Roberts1987}.
+		
+		Adicionalmente, conforme veremos na seção (\ref{comb-filter}) deste capítulo, um exemplo clássico de um filtro IIR é o Filtro Pente, pois se estável, a resposta simplesmente consiste em repetir 'series de impulsos que decrescem em amplitude com o tempo.
 		
 		
 	\subsection{Filtros FIR}
@@ -70,6 +72,7 @@
 	\cite{Lynn1998}
 	
 	\subsection{Filtros Adaptativos}
+	
 		Os filtros adaptativos são constituídos, geralmente, por estruturas FIR, em que os coeficientes dos modelos associados são modificados conforme um procedimento adaptativo. essa modalidade de filtro geralmente é empregada nos seguintes contextos (\textit{lista não exaustiva}):
 		
 		\begin{itemize}
@@ -98,7 +101,11 @@
 		Vale salientar, que alguns sistemas de comunicação de voz utilizam filtros adaptativos com o objetivo de cancelar ou reduzir ecos ou barulhos do ambiente. Nesse contexto, foi pensado inicialmente a utilização desse modelo de filtro para o projeto. No entanto, será explicado mais a frente a não adoção desse modelo, bem como pela utilização de um filtro FIR típico.
 		
 	\subsection{Filtro Pente - \textit{Comb Filter}}
-		Em termos práticos \textit{comb filter} ou “filtro pente” é uma versão atrasada do mesmo sinal, causando uma  interferência construtiva ou destrutiva
+	\label{comb-filter}
+		
+		Em termos práticos \textit{comb filter} ou “filtro pente” é uma versão atrasada do mesmo sinal, causando uma  interferência construtiva ou destrutiva de dois sons tocados simultaneamente, porém com atraso entre um para o outro.
+		
+		Há basicamente dois tipos de \textit{comb filters}: o com \underline{realimentação na entrada} (\textit{feedback comb filter}) e \underline{com alimentação na saída} (\textit{feedforward comb filter}).
 		
 		\begin{figure}[hbt]
 			\centering
@@ -107,7 +114,12 @@
 			\label{fig01-combfilter}
 		\end{figure}
 		
-		Similarmente, a estrutura geral de um sistema de realimentação de um \textit{comb filter} pode ser mostrado na figura (\ref{fig01-combfilter}). Além disso pode ser descrito pela seguinte equação de diferenças (\ref{eq01-combfilter}):
+		O filtro com realimentação 
+		
+		Como já informado, o caso do filtro pente com realimentação negativa é um caso especial de um Filtro de Resposta Infinita (\ref{IIR-section}), desde que é observado uma figura de atraso (delay) no sentido de realimentação no sistema. Este filtro pode ser modelo físico computacional de "séries de ecos", os quais decaem exponencialmente e espaçados uniformemente no tempo \cite{JULIUSO.SMITH2010}.
+		
+		
+		Continuando a análise do modelo do referido filtro, ve-se que a estrutura geral de um sistema de realimentação de um \textit{comb filter} pode ser mostrado através da figura (\ref{fig01-combfilter}). Além disso pode ser descrito pela seguinte equação de diferenças (\ref{eq01-combfilter}):
 				
 		\begin{equation}
 			\label{eq01-combfilter}
@@ -132,8 +144,16 @@
 		
 		\begin{equation}
 			|H(K,\alpha,\theta)| = \frac{1}{\sqrt{(1+a^2) - 2\alpha \cos(\theta K)}}
+			\label{eq04-combfilter}
 		\end{equation}
 		
+		Nota-se pela expressão do ganho dada pela equação (\ref{eq04-combfilter}) que seu valor tem valores de resposta periódica indo de um valor mínimo e subindo para um valor máximo.
+		
+		
+		
+		\begin{equation}
+			1-\alpha
+		\end{equation}
 		
 		
 		
