@@ -26,6 +26,14 @@
 \usepackage{multirow}
 \usepackage{pdfpages}
 \usepackage{lastpage}
+\usepackage[framemethod=default]{mdframed}
+
+
+\global\mdfdefinestyle{exampledefault}{%
+	linecolor=lightgray,linewidth=1pt,%
+	leftmargin=1cm,rightmargin=1cm,
+}
+
 
 %\usepackage[pdftex,a5paper,%
 %pdftitle={The Ducks},%
@@ -57,3 +65,14 @@ urlcolor=black
 
 \newcommand{\citeC}[1]{[\citeonline{#1}]}
 \renewcommand{\labelitemi}{$-$}
+
+
+% Ambiente para inserir notas no meio do texto
+\newenvironment{mymdframed}[1]{%
+	\mdfsetup{%
+		frametitle={\colorbox{white}{\,#1\,}},
+		frametitleaboveskip=-\ht\strutbox,
+		frametitlealignment=\raggedright
+	}%
+	\begin{mdframed}[style=exampledefault]
+	}{\end{mdframed}}

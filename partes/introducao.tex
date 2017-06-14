@@ -17,6 +17,10 @@
 
 \section{Comparativo entre soluções de Hardware}
 
+		No mercado, atualmente, poucas são as empresas possuem em seu portfólio esse tipo de efeito modulante com essa característica. Vale destacar que o efeito puramente de reverberação já é notoriamente conhecido e manipulado por diversos hardwares e softwares no mercado. Note-se que estamos falando do efeito adicional incorporado ao produto que é o chamado \textit{shimmer}.
+		
+		
+
 	\subsection{Micontroladores e DSP's}
 
 		O termo sistemas embarcados constituem circuitos eletrônicos que utilizam processadores digitais (microprocessadores ou microcontroladores, etc.) em aplicações dedicadas para determinado equipamento ou produtos.
@@ -43,4 +47,30 @@
 
 
 \section{Diagrama de Bloco do Projeto}
+
+	Nesta parte do trabalho, é mostrado de maneira abstrata os blocos necessários para que obtenha a saída do sistema desejado, ou seja, o efeito do \textit{Reverb} com \textit{Shimmer} implementado em software e executado em hardware.
+	
+	Temos aqui na figura \ref{bloco-principal} um sinal analógico oriundo e um instrumento musical - guitarra, que passa por um processador de som digital - DSP o qual faz toda o trabalho de tratamento do sinal analógico convertido para amostras digitais. Aplicando, portanto, nesse contexto, um filtro de resposta finita; um algoritmo de seleção de frequências denominado \textit{pitch-shifter} e por fim realimentando o sistema acrescentando um pequeno atraso temporal (\textit{delay}).
+	
+	\begin{figure}[!h t b]
+		\label{bloco-principal}
+		\centering
+		\includegraphics[scale=0.5]{./figuras/diagrama_bloco_principal.PNG}
+		\caption{Diagrama de Blocos Principal do Projeto.}
+	\end{figure}
+
+	Como uma lei de controle de malha fechada podemos ilustrar (figura \ref{signal_principal}) também como um diagrama de fluxo de sinais da seguinte forma:
+	
+	\begin{figure}[!h t b]
+		\label{signal_principal}
+		\centering
+		\includegraphics[scale=0.5]{./figuras/fluxo_de_sinais_principal.png}
+		\caption{Diagrama de Fluxo de Sinais do Projeto.}	
+	\end{figure}
+	
+	
+	
+	
+	
+	
 

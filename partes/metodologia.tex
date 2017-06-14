@@ -67,9 +67,8 @@
 		Vantagens:
 		\begin{itemize}
 			\item Um filtro não recursivo como o filtro FIR é inerentemente estável. Conforme pode ser visto na função de transferência ela é especificada em termos do zeros apenas no plano-z. Logo não há grandes preocupações em termos da escolha dos coeficientes que possam causar instabilidade no sistema, posto que seu LGR encontra-se estritamente dentro do semi-plano esquerdo do domínio-z.
-			\item O filtro FIR (resposta ao impulso) tem forma simétrica no seu espectro de frequência. Isso produz uma característica de fase linear ideal, ou seja, é equivalente a puramente um atraso temporal em todas as componentes de frequência passando pelo filtro. Em outras palavras, podemos dizer que o filtro FIR não tem \textit{distorção de fase}.
+			\item O filtro FIR (resposta ao impulso) tem forma simétrica no seu espectro de frequência. Isso produz uma característica de fase linear ideal, ou seja, é equivalente a puramente um atraso temporal em todas as componentes de frequência passando pelo filtro. Em outras palavras, podemos dizer que o filtro FIR não tem \textit{distorção de fase} \cite{Lynn1998}.
 		\end{itemize}
-	\cite{Lynn1998}
 	
 	\subsection{Filtros Adaptativos}
 	
@@ -103,23 +102,29 @@
 	\subsection{Filtro Pente - \textit{Comb Filter}}
 	\label{comb-filter}
 		
-		Em termos práticos \textit{comb filter} ou “filtro pente” é uma versão atrasada do mesmo sinal, causando uma  interferência construtiva ou destrutiva de dois sons tocados simultaneamente, porém com atraso entre um para o outro.
+		Em termos práticos \textit{comb filter} ou “filtro pente” é uma versão atrasada do mesmo sinal, causando uma  interferência construtiva ou destrutiva de dois sons tocados simultaneamente, porém com atraso entre um para o outro. 
 		
-		Há basicamente dois tipos de \textit{comb filters}: o com \underline{realimentação na entrada} (\textit{feedback comb filter}) e \underline{com alimentação na saída} (\textit{feedforward comb filter}).
+		Nesse sentido, há basicamente dois tipos de \textit{comb filters}: o (\textit{feedback comb filter}) e (\textit{feedforward comb filter}). Resumidamente, os nomes referem-se à direção em que os sinais são atrasados antes de serem adicionados à entrada. O primeiro tipo considera em adicionar a saída do filtro a entrada imediatamente posterior, enquanto o segundo considera apenas adicionar à saída do filtro as entradas presente e a mesma entrada atrasada.
 		
 		\begin{figure}[hbt]
 			\centering
-			\includegraphics[scale=0.5]{./figuras/Comb_filter_feedback.png}
-			\caption{Filtro Pente - \textit{Comb Filter} - Forma de Realimentação}
+			\subfigure[\textbf{Feedback comb-filter}]{
+				\includegraphics[scale=0.5]{./figuras/Comb_filter_feedback.png}
+				\label{fig01a-combfilter}
+				}
+			\qquad
+			\subfigure[\textbf{Feedforward comb-filter}]{
+				\includegraphics[scale=0.5]{./figuras/Comb_filter_feedforward.png}
+				\label{fig01b-combfilter}
+			}
+			\caption{Filtro Pente - \textit{Comb Filter} - Formas de Realimentação}
 			\label{fig01-combfilter}
 		\end{figure}
 		
-		O filtro com realimentação 
-		
-		Como já informado, o caso do filtro pente com realimentação negativa é um caso especial de um Filtro de Resposta Infinita (\ref{IIR-section}), desde que é observado uma figura de atraso (delay) no sentido de realimentação no sistema. Este filtro pode ser modelo físico computacional de "séries de ecos", os quais decaem exponencialmente e espaçados uniformemente no tempo \cite{JULIUSO.SMITH2010}.
+		Como já informado, o caso do filtro pente com realimentação na saída, é um caso especial de um Filtro de Resposta Infinita (\ref{IIR-section}), posto que pode ser observado uma figura de atraso (\textit{delay}) no sentido de realimentação no sistema. Este filtro pode ser um modelo físico computacional de "séries de ecos", os quais decaem exponencialmente, bem como espaçados uniformemente no tempo \cite{JULIUSO.SMITH2010}.
 		
 		
-		Continuando a análise do modelo do referido filtro, ve-se que a estrutura geral de um sistema de realimentação de um \textit{comb filter} pode ser mostrado através da figura (\ref{fig01-combfilter}). Além disso pode ser descrito pela seguinte equação de diferenças (\ref{eq01-combfilter}):
+		Continuando a análise do modelo do referido filtro, ve-se que a estrutura geral de um sistema de realimentação de um \textit{ feedback comb filter} pode ser mostrado através da figura \ref{fig01a-combfilter}. Além disso pode ser descrito pela seguinte equação\footnote{Para um critério de estabilidade o coeficiente $\alpha$ da equação \ref{eq01-combfilter} tem que ser menor ou igual a 1 (0db).} de diferenças \ref{eq01-combfilter}:
 				
 		\begin{equation}
 			\label{eq01-combfilter}
@@ -140,29 +145,47 @@
 			H(z) = \frac{Y(z)}{X(z)} = \frac{1}{1-\alpha z^{-K}} = \frac{z^K}{z^K-\alpha}
 		\end{equation}
 		
-		Uma das formas de estimar a resposta de magnitude em função do valor do tempo de delay $K$ e fator de atenuação/ganho $\alpha$ é expressar $ H(z) $ em termos de módulo $|H(K,\alpha)|$, bem como, de maneira conveniente, utilizando uma substituição $ z = \epsilon^{j\theta} $.
+		Uma das formas de estimar a resposta de magnitude em função do valor do tempo de delay $K$ e fator de atenuação/ganho $\alpha$ é expressar $ H(z) $ em termos de módulo $|H(K,\alpha)|$, bem como, de maneira conveniente, utilizando uma substituição $ z = e^{j\omega} $.
 		
 		\begin{equation}
-			|H(K,\alpha,\theta)| = \frac{1}{\sqrt{(1+a^2) - 2\alpha \cos(\theta K)}}
+			|H(e^{j\omega})| = \frac{1}{|1-\alpha e^{-j\omega K}|},
+			\qquad
+			-\pi\leq \omega \leq \pi
 			\label{eq04-combfilter}
 		\end{equation}
 		
-		Nota-se pela expressão do ganho dada pela equação (\ref{eq04-combfilter}) que seu valor tem valores de resposta periódica indo de um valor mínimo e subindo para um valor máximo.
+		Nota-se pela expressão do ganho dada pela equação (\ref{eq04-combfilter}) que seu valor tem valores de resposta \textbf{periódica} indo de um valor mínimo e subindo para um valor máximo.
 		
-		
-		
-		\begin{equation}
-			1-\alpha
-		\end{equation}
-		
-		
-		
-		De maneira análoga o \textit{Comb Filter} também pode ser implementado no domínio do tempo. O diagrama de representação do sistema pode ser descrito pela equação ():
+		Supondo o valor de $\alpha = 1$ ($0$ dB), para simplificar os cálculos, a amplitude da resposta reduz-se a:
 		
 		\begin{equation}
-			y(t) = x(t) + \alpha x(t-\tau)
 			\label{eq05-combfilter}
+			H(w) = \frac{1}{2|sin(\omega M/2)|}
 		\end{equation}
+
+		Note ainda que para $\alpha > 0$ são produzidos picos de ressonância em:
+		
+		\begin{equation}
+			\begin{aligned}
+				\sin(\omega K/2) &= 0 \\
+				\omega \frac{K}{2} &= p\pi,\quad p=0,1,2,...,K-1\\
+				w_p &= 2\pi\frac{p}{K}
+			\end{aligned}
+		\end{equation}
+		
+		Ou seja, em todos harmônicos pares do filtro.
+				
+		Ademais, esses filtros são utilizados em toda sorte de efeitos de sons, principalmente no universos de instrumentos musicais. Vários desses filtros podem ser usados por exemplo para simular uma reverberação. (\cite{JuliusO.Smith2010})
+		
+		Por último, vamos falar do modelo proposto para o projeto deste trabalho, no qual consiste de uma versão mais generalista do \textit{feedback comb-filter}. Este modelo propõe a alocação de um filtro casual $H_l(z)$ na malha de realimentação, em vez de apenas um ganho de atenuação $\alpha$. A função de transferência \ref{eq02-combfilter} pode ser então reescrita como:
+		
+		\begin{equation}
+			H(z) = \frac{1}{1-H_l(z)z^{-K}}
+		\end{equation}
+		
+		\begin{mymdframed}{NOTA}
+			Para o critério de estabilidade do sistema, a amplitude de resposta do filtro $ H_l(z) $ deverá ser menor que 1 em todas as frequências, i.e, $ |H_l(e^{j\omega T})| < 1, \forall \omega T \in [-\pi,\pi)$
+		\end{mymdframed}
 		
 		
 		
