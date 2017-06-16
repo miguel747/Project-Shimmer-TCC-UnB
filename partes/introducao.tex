@@ -4,23 +4,110 @@
 
 
 \section{Contextualização e Definição do Problema}
-
-\section{Introdução à Conceituação do Efeito  de modulação\textit{Reverb}}
-	\subsection{Aplicabilidade}
+	\subsection{Efeito  de ambientização: \textit{Reverb}}
+	\label{aplicabilidade}
+		
 		Numa sala, ou em qualquer ambiente acústico, existe um caminho direto pelo qual uma fonte de áudio qualquer pode ser ouvida, no entanto, as respectivas ondas sonoras também podem fluir em caminhos mais longos devido a, por exemplo, reflexão das paredes, do teto, de objetos, antes delas chegarem ao receptor.
 		
 		A energia envolvida som dessas reflexões, as quais viajam essas distâncias maiores do que o som emitido no caminho direto, são parcialmente absorvidas pelas superfícies, logo elas chegam ao receptor com um som mais "fraco" que o som direto.
 		
-		Essas amostras de som atrasadas e atenuadas ocorridas no evento da emissão do som original é o que denominamos de \textit{reverbaração}.
+		Essas amostras de som atrasadas e atenuadas ocorridas no evento da emissão do som original é o que denominamos de \textbf{reverbaração}.
 		
-		Muito embora possa parecer algo sim, o efeito de reverberação é muito mais que uma série de ecos. 
-
+		\begin{figure}[!h b t]
+			\centering
+			\includegraphics[scale=0.5]{./figuras/reverb01.png}
+			\caption{Ilustração do efeito de Reverberação.}
+			\label{reverb01}
+		\end{figure}
+		
+		Muito embora possa parecer ao primeiro momento, o efeito de reverberação é muito mais que uma série de ecos. Um eco, por exemplo, pode ser entendido um resultado de uma distinção, atraso de versões de um som, o qual você pode ouvir com um atraso no mínimo de 40 milissegundos. Já a reverberação de uma sala vazia, por exemplo, há muitas e muitas reflexões, e as primeiras delas que chegam ao receptor são muito mais curtas que termos de tempo de duração. Logo essas reflexões não são tão percebidas ou distinguidas do som da fonte diretamente. Em vez disso, nós percebemos apenas o efeito da combinação de todas essas reflexões.
+		
+		\begin{figure}[!h b t]
+			\centering
+			\includegraphics[scale=0.5]{./figuras/reverb02.png}
+			\caption{Resposta de um Impulso de uma sala pequena.}
+			\label{reverb02}
+		\end{figure}
+		
+		Nesse sentido, podemos também considerar que a reverberação do som é mais do que um simples dispositivo de \textit{delay} com retorno. No \textit{reverb} a taxa em que as reflexões chegarão muda ao longo do tempo, em oposição de termos apenas que simular reflexões que tenham um intervalo fixo entre elas. Essas reflexões são relacionadas a posição do som que o receptor está na sala, ao tipo de construção da sala (oval, retangular), tamanho e material das paredes. 
+		
+		
+	\subsection{Tipos de Reverb}
+	
+		Falando sob o aspecto musical e industrial de equipamentos que realizam o processamento e simulação de efeitos de repetição (tal como o reverb, delay) termos no mercado diversos tipos de \textit{reverb`s}, os quais possuem diferentes aplicações que veremos a seguir:
+		
+		\begin{itemize}
+			\item \textbf{Spring} ("Reverb-de-mola") - O efeito de reverberação com mola é um método que foi primeiramente proposto por \textit{Hammond} em 1940s. O reverb de mola foi criado naturalmente, por um sistema mecânico, o qual usa um transdutor e um captador nas extremidades de uma mola, para criar e capturar vibrações dentro dela. Muitos amplificadores de guitarra incluem esse tipo de reverberação dentro de seus projetos. Existem ainda muitos pedais de reverb que oferecem esse efeito emulado digitalmente e apenas algumas companhias, por questões de custo de construção, também lançaram produtos com um sistema real de reverb de molas.
+			
+			\begin{figure}[! h]
+				\centering
+				\includegraphics[scale=0.3]{./figuras/spring-reverb.jpg}
+				\caption{Câmara de reverb de mola de um amplificador}
+				\label{spring-reverb}
+			\end{figure}
+			
+			\item \textbf{Room} ("Reverb-sala") - Este tipo de reverb é usado para simular um som natural de uma sala acústica, geralmente vazia, que tem um tamanho geralmente pequeno. Esses reverbs usualmente possuem reflexões curtas que desaparecem rapidamente com o tempo. 
+			
+			\item \textbf{Hall} ("Reverb-palco") - Reverb's dessa categoria são usados para simular um tipo de reverberação encontrado num grande teatro ou até mesmo catedrais ou igrejas. Eles "soam" geralmente mais fortes do que um \textit{room reverb} por conta da quantidade de reflexões serem significativamente maiores e mais longas. Pode ser encontrado a variação de hall reverbs como "\textit{cathedral}".
+			
+			\item \textbf{Plate} ("Reverb-de-placas") - Um plate reverb é definitivamente o efeito que exige uma grande logística a ser empregada. Uma grande máquina conforme mostrado na figura () a qual fornece o áudio dentro de grandes "placas" penduradas de metal que produzem um som de reverb que é mais definido do que o efeito do hall-reverb enquanto ainda é capaz de produzir longos decaimentos no tempo.
+			
+			\begin{figure}[! h]
+				\centering
+				\includegraphics[scale=0.3]{./figuras/plate-reverb.jpg}
+				\caption{Pequeno protótipo de um reverb de placas.}
+			\end{figure}
+			
+			\item \textbf{Pitch-Shifter Reverb} aka \textbf{Shimmer} - Bem esse efeito de reverb será o foco de desenvolvimento desse trabalho. O shimmer tem se tornado bem comum entre pedais de guitarra principalmente nesses últimos anos. A grosso modo, esses reverbs adicionam componentes harmônicos do som original para dar a sensação de ambiência e harmonia e simulam a reverberação desses sons mais agudos na "cauda" (no final do reverb).
+			
+			Este som tem características bem peculiares, as quais geralmente as pessoas associam a um som de orquestra angelical ou sintetizadores de teclado, dando uma intensa ambiência e atmosfera no som.
+			
+			Diferente dos demais reverbs, o Shimmer é um efeito eminentemente sintetizado, ou seja, produzido digitalmente por meio de algoritmos embarcados em DSP`s e comercializados como equipamentos de produção digital.
+			
+		\end{itemize}
+		
+						
 \section{Comparativo entre soluções de Hardware}
-
-		No mercado, atualmente, poucas são as empresas possuem em seu portfólio esse tipo de efeito modulante com essa característica. Vale destacar que o efeito puramente de reverberação já é notoriamente conhecido e manipulado por diversos hardwares e softwares no mercado. Note-se que estamos falando do efeito adicional incorporado ao produto que é o chamado \textit{shimmer}.
 		
+		De acordo com a seção \ref{aplicabilidade}, numa sala de concerto, o som que espectador ouve contém tanto o som original produzido pela fonte (voz, instrumento acústico, sistema de sonorização, etc) quanto às milhares de reflexões desse som original, que bate no chão, paredes e teto, até chegar aos ouvidos, com um pequeno atraso. Essas reflexões são como milhares de ecos do sinal direto que, devido à sua grande quantidade, não são percebidas exatamente como ecos, mas sim como o efeito de “reverberação”. 
 		
-
+		Baseados na reflexividade de um ambiente podemos distinguir os materiais de que ele é composto. Em salas grandes com paredes elevadas de tijolo a reverberação geralmente é muito pesada e precisa de algum tempo até cessar. Já uma sala pequena, com muitos objetos dentro, possui uma reverberação muito pequena, em geral nem percebida como tal. Entretanto, essa pequena reverberação de fato existe, e por essa a razão é que os projetistas de processadores de efeitos incluírem vários tipos básicos de reverberações, dando a eles nomes de tipos diferentes de “salas” - room reverb. É muito natural, por exemplo, que uma programação de reverb chamada “Catedral” - reverb hall produza uma reverberação longa e muito densa, enquanto uma programação chamada de “Room” represente a acústica de uma sala muito menor \cite{Albar2007}. 
+		
+		Diante dessa realidade, no mercado, atualmente, várias são as empresas que possuem em seu portfólio esse tipo de efeito com essas características clássicas. Contudo, o efeito \textit{shimmer} é um dos mais complexos a serem implementados na prática devido ao seu alto custo de processamento. Todos os detalhes serão abordados mais a frente neste trabalho.
+		
+		\begin{mymdframed}{NOTA}
+			Vale destacar que o efeito puramente de reverberação já é notoriamente conhecido e manipulado por diversos hardwares e softwares no mercado. Note-se que estamos falando do efeito adicional incorporado ao produto que é o chamado \textit{shimmer}.
+		\end{mymdframed}
+	
+		\subsection{Hardwares de Reverb-Shimmer}
+			
+			Apesar dos equipamentos ora aqui listados serem conservacionalmente populares no meio musical, tendo diversas aplicações em projetos musicais, infelizmente não se pôde obter detalhes técnicos específicos, em termos de performance de \textit{hardware}, além do que consta em seus manuais ou algum \textit{review} na internet, os quais foram de imensa ajuda principalmente para o produto da empresa Strymon (\textit{BigSky Reverb}).
+			
+			
+			\begin{enumerate}
+				\item \textbf{Eventide H9}: A Eventide, Inc. (também conhecida anteriormente como Eventide \textit{Clock Works Inc}., ou hoje simplesmente como Eventide) é uma companhia de áudio, transmissões, comunicações e aviônica dos Estados Unidos cuja divisão de áudio produz processadores de áudio, software DSP e efeitos de guitarra.
+				Eventide foi uma das primeiras companhias a produzir processadores de áudio digital e seus produtos são fundamentais em gravação e reprodução de som, pós-produção e estúdios de transmissão. Ela possui um pedal de guitarra chamado H9 (\ref{eventide-h9}) "revolucionário" que embarca diversos tipos de efeito e possui grande poder de processamento e efeito com qualidade profissional num formato relativamente compacto. Neste pedal é possível importar algoritmos de efeitos de modulação, de repetição e diversas ambiências tal como o efeito de reverb shimmer tudo através de sua entrada serial universal (USB) utilizando um \textit{software} proprietário.
+				
+				\begin{figure}[!h]
+					\centering
+					\includegraphics[scale=0.3]{./figuras/eventide-h9.jpg}
+					\caption{Foto modelo Eventide H9 - Effects Processor.}
+					\label{eventide-h9}
+				\end{figure}
+				
+				\item \textbf{Strymon BigSky}: A empresa Strymon, fundada em meados de 2008, é considerada uma das empresas mais bem sucedidas no universos de pedais de guitarra de linha exclusiva (\textit{boutique-pedals}) que integram algoritmos de tratamento de sinais de áudio extremamente avançados.
+				
+				Vale salientar que com tantas grandes empresas produzindo diversos produtos, sendo por vezes um réplica do outro, é impressionante ver uma pequena empresa produzir um produto de qualidade notoriamente alta. Foi, de fato, uma reinvenção da roda em termos de qualidade dos efeitos e o resultado esperado pelo usuário final.
+				
+				\begin{enumerate}
+					\item \textbf{Qualidade de Áudio}:
+					\item \textbf{Processador}:
+				\end{enumerate}
+				
+				
+				 
+			\end{enumerate} 
+		
 	\subsection{Micontroladores e DSP's}
 
 		O termo sistemas embarcados constituem circuitos eletrônicos que utilizam processadores digitais (microprocessadores ou microcontroladores, etc.) em aplicações dedicadas para determinado equipamento ou produtos.
@@ -62,10 +149,10 @@
 	Como uma lei de controle de malha fechada podemos ilustrar (figura \ref{signal_principal}) também como um diagrama de fluxo de sinais da seguinte forma:
 	
 	\begin{figure}[!h t b]
-		\label{signal_principal}
 		\centering
 		\includegraphics[scale=0.5]{./figuras/fluxo_de_sinais_principal.png}
 		\caption{Diagrama de Fluxo de Sinais do Projeto.}	
+		\label{signal_principal}
 	\end{figure}
 	
 	

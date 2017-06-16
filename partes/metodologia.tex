@@ -2,6 +2,119 @@
 
 
 \section{Sinais de Tempo Discreto e Transformada Discreta de \textit{Fourier}}
+	Sabe-se que a transformada de Fourier de um sinal de tempo contínuo $x(t)$ é dada por:
+	
+	\begin{equation}
+		X(f) = \mathscr{F} [x(t)] = \int_{-\infty}^{\infty}x(t)e^{-j2\pi f t}dt
+		\label{eq:1}
+	\end{equation}
+	
+	Na maioria das vezes, um sinal de áudio dificilmente terá uma representação analítica, como geralmente ocorre com os sinais no mundo real. Assim, teremos que representar o sinal $X(f)$ numa quantidade finita de frequências, em outras palavras, é possível determinar somente um número finito de amostras de $X(f)$.
+	
+	Nesse caso, uma forma de amostrar um sinal é através do concatenamento do sinal original $x(t)$ por um trem de impulsos periódicos $\delta_{T_s}(t)$. O período, $T_s$, é chamado de intervalo de amostragem: é o espaçamento entre amostras consecutivas tomadas de $x(t)$.
+	
+	O sinal amostrado $x_s(t)$ é dado matematicamente pela seguinte equação, para $n\in \Z$:
+	
+	\begin{equation}
+	x_s(t) = \sum_{n=-\infty}^{\infty}x(nT_s)\delta(t-nT_s)
+	\label{eq:2}
+	\end{equation}
+	
+	A transformada de Fourier neste caso para o sinal $x_s(t)$, pode ser obtida da seguinte forma:
+	
+	\begin{equation}
+		X_s(f) = \mathscr{F}[x(t)\delta_{T_s}(t)] = X(f)\ast\Delta_{T_s}(f) = X(f)\ast f_s\sum_{k=-\infty}^{\infty}\delta(f-kf_s) = \boxed{f_s\sum_{k=-\infty}^{\infty}X(f-kf_s)}
+		\label{eq:3}			
+	\end{equation}
+	
+	Nota-se que o sinal $X_s(f)$ é periódico com período $f_s$ hertz. Considerando uma largura espectral do sinal $X(f)$ como B, em que $X(f) = 0$ para $|f|\ge f_s/2$ - isto é, $B \le f_s/2$, ou, de forma análoga $f_s \ge 2B$.
+	
+	Dessa forma podemos avaliar o sinal $X(f)$ como sendo:
+	
+	\begin{equation}
+	X(f) = T_s.X_s(f)
+	\label{eq:4}
+	\end{equation}, para $|f|<f_s/2$, se $f_s \ge 2B$
+	
+	Ou seja, se $f_s\ge 2B$, é possível obter X(f) a partir do sinal discreto $X_s(f)$ que, por consequência, reconstruir $x(t)$ a partir de $x_s(t)$. Esse resultado é conhecido como \textbf{teorema da amostragem}.
+	
+	No nosso caso concreto, teremos que utilizar esses conceitos para avaliar uma taxa de amostragem coerente bem como conceitos relativos ao tipo de método usado para representar digitalmente amostras de um sinal analógico.
+	
+	Vale também salientar que o espectro $X_s(f)$ pode ser obtido calculando-se diretamente a transformada de Fourier de $x_s(t)$ usando-se as equações \eqref{eq:1} e \eqref{eq:2}, pode-se mostrar que:
+	
+	\begin{equation}
+	X_s(f) = \int_{-\infty}^{\infty}\underbrace{x_s(t)}_{x(nT_s)\delta(t-nT_s)}e^{-j2\pi ft}dt = \sum_{n=-\infty}^{\infty}x(nT_s)e^{-j2\pi fnT_s}
+	\label{eq:5}
+	\end{equation}
+	
+	Substituindo na equação \eqref{eq:4}, para $|f|<f_s/2$, se $f_s\ge 2B$ temos:
+	
+	\begin{equation}
+	X(f) = T_s\sum_{n=-\infty}^{\infty}x(nT_s)e^{-j2\pi fnT_s}
+	\label{eq:6}
+	\end{equation}
+	
+	
+	Nota-se que a equação \eqref{eq:6} pode ser usada também para o cálculo numérico de $X(f)$\footnote{A expressão dada equação \eqref{eq:6} para $X(f)$ é a mesma que se obtém utilizando a regra do trapézio para solucionar numericamente a equação \eqref{eq:1}, contudo com essa abordagem é mais difícil visualizar com clareza aspectos importantes e limitações desse cálculo numérico}.
+	
+	Apesar dessa discretização do sinal ainda tratamos de um sinal com somatório infinito, que, em geral, não será possível de ser calculado. Portanto, esse somatório precisa ser truncado, e consequentemente, não se terá mais a igualdade da equação \eqref{eq:6}, mesmo que $X(f) = 0$ para $|f| \ge f_s/2$.
+	
+	Uma consideração acerca desse truncamento é dada pela equação abaixo, para $n\in [0,N-1]$:
+	
+	\begin{equation}
+	\label{eq:7}
+	\hat{X}(f) = T_s\sum_{n=0}^{N-1}x(nT_s)e^{-j2\pi fnT_s}
+	\end{equation}
+	
+	
+	Uma forma de tratar o truncamento, por questões de continuidade manter a continuidade do sinal amostrado, é considerá-lo como resultante do truncamento do sinal $x(t)$, realizado por meio da multiplicação desse sinal com um sinal $w(t)$ de duração finita, geralmente $w(t)$ é um sinal retangular. Chamaos o sinal $w(t)$ de sinal-janela ou, simplesmente janela.
+	
+	Assim definimos o sinal $x_w(t)$ como sendo:
+	
+	\begin{equation}
+	\label{eq:8}
+	x_w(t) = w(t)x(t)
+	\end{equation}
+	
+	Escolhendo um tempo de janelamento $Tw = NT_s$, tem-se que $x_w(nT_s) = 0$ para $n \notin [0,N-1]$. Assim, substituindo na equação \eqref{eq:6} podemos obter uma aproximação $\hat{X}(f)$, para $|f|<f_s/2$, dada por:
+	
+	\begin{equation}
+	\label{eq:9}
+	\hat{X}(f) = T_s \sum_{n=0}^{N-1}x_w(nT_s)e^{-j2\pi fnT_s}
+	\end{equation}
+	
+	Podemos considerar que a aproximação da equação \eqref{eq:9} é idêntica a fornecida pela equação \eqref{eq:7} pois, considerando que o sinal $w(t)$ é uma janela retangular\footnote{$w(t) = rect\left(\frac{t-T_w/2}{T_w}\right) = \begin{cases}1,\, 0\le t < T_w \\ 0, \,\, c.c\end{cases}$}, então $x_w(nT_s) = x(nT_s)$, para $n\in [0,N-1]$.
+	
+	Todavia o somatório dessas equações, embora finito, não poderá ser transofrmado em uma expressão analítica válida para qualquer $|f|<f_s/2$. Isto é, para cada valor de $f$ dado, para o qual se deseje determinar $\hat{X}(f)$, será preciso calcular o referido somatório, o que não é nada prático.
+	
+	Uma alternativa é o cálculo de $\hat{X}(f)$ para valores de $f$ espaçados de:
+	
+	\begin{equation}
+	\label{eq:10}
+	\Delta f = \frac{f_s}{N}
+	\end{equation}
+	
+	Ou seja, para $f = k\Delta f$, $k\in \Z$
+	
+	Assim, usando a equação\footnote{Sendo $|f|<f_s/2$ e $f = k\Delta f$, portanto $|f| = |k||f_s/2|\Rightarrow |k|>N/2$.} \eqref{eq:9}, para $|k|\le N/2$:
+	
+	\begin{equation}
+	\label{eq:11}
+	\hat{X}(k\Delta f) = T_s \sum_{n=0}^{N-1}x_w(nT_s)e^{-j2\pi k \frac{f_s}{N}nT_s} = T_s\sum_{n=0}^{N-1}x_w(nT_s)e^{-j\frac{2\pi}{N}kn}
+	\end{equation}
+	
+	
+	Finalmente definindo o sinal de tempo discreto $x_w[n] = x_w(nT_s)$, a equação \eqref{eq:11} pode ser reescrita como:
+	
+	\begin{equation}
+	\label{eq:12}
+	\hat{X}(k\Delta f) = T_s\sum_{n=0}^{N-1}x_w[n]e^{-j2\pi k \frac{f_s}{N}n}
+	\end{equation}
+	
+	O somatório dessa equação é a transformada de Fourier discreta (DFT - \textit{discrete Fourier transform}).
+	
+	O conhecimento desse conceito matemático, bem como suas limitações quanto aos problemas de janelamento e de sobreposição espectral (aliasing) são fundamentais para entendimento das próximas atividades efetuadas.
+	
 
 \section{Filtros Digitais}
 
@@ -175,7 +288,7 @@
 		
 		Ou seja, em todos harmônicos pares do filtro.
 				
-		Ademais, esses filtros são utilizados em toda sorte de efeitos de sons, principalmente no universos de instrumentos musicais. Vários desses filtros podem ser usados por exemplo para simular uma reverberação. (\cite{JuliusO.Smith2010})
+		Ademais, esses filtros são utilizados em toda sorte de efeitos de sons, principalmente no universos de instrumentos musicais. Vários desses filtros podem ser usados por exemplo para simular uma reverberação\cite{JuliusO.Smith2010}.
 		
 		Por último, vamos falar do modelo proposto para o projeto deste trabalho, no qual consiste de uma versão mais generalista do \textit{feedback comb-filter}. Este modelo propõe a alocação de um filtro casual $H_l(z)$ na malha de realimentação, em vez de apenas um ganho de atenuação $\alpha$. A função de transferência \ref{eq02-combfilter} pode ser então reescrita como:
 		
@@ -188,10 +301,10 @@
 		\end{mymdframed}
 		
 		
-		
-\section{Conversão Digital Analógica}
+\section{Conversão Analógica Digital}	
+			
 
-\section{Conversão Analógica Digital}
+\section{Conversão Digital Analógica}
 
 \section{Comunicação Serial I2C}
 	

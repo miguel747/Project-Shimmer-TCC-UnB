@@ -4,7 +4,7 @@
 \usepackage{epsfig}
 \usepackage{subfigure}
 \usepackage{amsfonts}
-\usepackage{amsmath}
+\usepackage{amsmath,mathrsfs}
 \usepackage{amssymb}
 \usepackage[thmmarks,amsmath]{ntheorem}%\usepackage{amsthm}
 \usepackage{boxedminipage}
@@ -26,7 +26,47 @@
 \usepackage{multirow}
 \usepackage{pdfpages}
 \usepackage{lastpage}
+
+
+%frames para notas
 \usepackage[framemethod=default]{mdframed}
+
+
+%configuracao de legendas para figuras e graficos
+\usepackage[labelfont=small,textfont={small,it}]{caption}
+
+
+
+%----------------------------------------comandos para enunciar e enumerar enunciados
+\newcommand{\dem}{\quad {\bf Demonstração:}\quad}
+\newcommand{\fim}{\newline \begin{flushright} $\blacksquare$ \end{flushright}}
+\newtheorem{defi}{Definição}[section]
+\newtheorem{lema}{Lema}[section]
+\newtheorem{conj}{Conjectura}[section]
+\newtheorem{exem}{Exemplo}[section]
+\newtheorem{axi}{Axioma}[section]
+\newtheorem{prop}{Propriedade}[section]
+\newtheorem{obs}{Observação}[section]
+\newtheorem{teo}{Teorema}[section]
+\newtheorem{corol}{Corolário}[section]
+\newtheorem{res}{Resolução}[section]
+%----------------------------------------------sí­mbolos
+\newcommand{\R}{\mathbb{R}}%reais
+\newcommand{\dotp}{\bullet}%produto escalar
+\newcommand{\K}{\mathbb{K}}%corpo qualquer
+\newcommand{\C}{\mathbb{C}}%complexos
+\newcommand{\N}{\mathbb{N}}%naturais
+\newcommand{\Z}{\mathbb{Z}}%inteiros
+\newcommand{\Q}{\mathbb{Q}}%racionais
+\newcommand{\U}{\mathcal{U}}%espaÃ§os vetoriais
+\newcommand{\V}{\mathcal{V}}%espaÃ§os vetoriais
+\newcommand{\W}{\mathcal{W}}%espaços vetoriais
+\newcommand{\E}{\mathbb{E}}%espaÃ§os vetoriais
+\newcommand{\HRule}{\rule{\linewidth}{0.5mm}}
+\newcommand{\X}{$\bullet$}
+\newcommand{\ignore}[1]{}
+
+%-------------------------------------------------------------------------------------
 
 
 \global\mdfdefinestyle{exampledefault}{%
