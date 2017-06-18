@@ -1,10 +1,10 @@
 \chapter{Implementação do Projeto}
 
-\section{Bloco 0 - Conversão Analógico Digital}
+\section{Bloco 0 - Conversão A/D no MSP430}
 	
-	Antes do sinal chegar ao microcontrolador para o correto processamento do sinal de aúdio, será necessário, conforme já relatamos, amostrar esse final através de valores corretamente quantizados, para isso conforme abordado na seção (----colocar a secao que fala sobre conversao AD - teoria---) deste trabalho, é necessário utilizar um Conversor Analógico Digital.
+	Antes do sinal chegar ao microcontrolador para o correto processamento do sinal de áudio, será necessário, conforme já relatamos, amostrar esse sinal através de valores corretamente quantizados. Para isso, conforme abordado na seção \ref{secao-conv-analogica-digital} deste trabalho, é necessário utilizar um Conversor Analógico Digital - ADC.
 	
-	O modelo do MSP 430 em questão (MSP430F5529LP) possui um conversor A/D interno de 12 (doze) bits (ADC12). Ou seja, é possível representar em níveis de pulso até 4096 níveis. Algumas características podemos listar pois será objeto de avaliação dentro do projeto \cite{Davies2008}.
+	O modelo do MSP 430 em questão (MSP430F5529LP) possui um ADC interno de 12 (doze) bits (ADC12). Ou seja, é possível representar em níveis de pulso até 4096 níveis. Algumas características podemos listar pois será objeto de avaliação dentro do projeto \cite{Davies2008}.
 	
 	\begin{itemize}
 		\item Resolução de 12 bits monotônica, sem perdas de código;
@@ -31,8 +31,10 @@
 			\item Em especial, o módulo ADC12\_A é configurado por dois registros de controle: o ADC12CTL0 e ADC12CTL1.
 			\item  O modo de funcionamento do conversor (conversão simples ou sequência de canais) pode ser configurado pelos \textit{bits} CONSEQx (registrador ADC12CTL1);
 			\item Após isso, seleciona-se o endereço inicial da memória de conversão, pelos \textit{bits} CSTARTADDx (registrador ADC12CTL1);
-			\item Por fim, liga-se o conversor (\textit{bit} ADC12CTL0:ADC12ON=1) e habilitam-se as conversões (\textit{bit} ADC12CTL0:ENC=1).
+			\item Por fim, liga-se o conversor (\textit{bit} ADC12CTL0:ADC12ON=1) e habilitam-se as conversões (\textit{bit} ADC12CTL0:ENC=1).7
 		\end{enumerate}
+	
+	
 \section{Bloco 1 - Projetando um Filtro FIR}
 	\subsection{Comunicação Serial}
 		

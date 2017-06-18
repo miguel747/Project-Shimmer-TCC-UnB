@@ -171,6 +171,18 @@
 		
 		
 	\subsection{Filtros FIR}
+	
+		Os filtros de resposta finita ao impulso (\textit{Finite Impulse Response} - FIR), também conhecidos como filtros não recursivos ou de média nível, são modelados pela equação de diferenças (\ref{eq-fir-01}) ou pela função de transferência (\ref{eq-fir-02}), em que basicamente os valores dos coeficientes dos modelos define a natureza do filtro (passa-baixa; passa-alta; passa-faixa; rejeita-faixa). A denominação FIR se deve a saída do modelo decair para um valor nulo em um tempo finito em resposta a um impulso aplicado na entrada do filtro correspondente. Como características dessa categoria de filtros pode-se citar que são inerentemente estáveis (ao contrário dos filtros IIR), e apresentam variação de fase linear na faixa de frequência de operação (uma condição apropriada para aplicações em sistemas com modulação/demodulação de fase). Podemos ainda visualizar através da figura \ref{fig01-fir} a representação do filtro em diagrama de fluxo de sinais (figura \ref{figura1-fir}) e diagrama de blocos (figura \ref{figura2-fir}).
+		
+		\begin{equation}
+			x(n) = \sum_{k=0}^{N-1} b_k x(n-k)
+			\label{eq-fir-01}
+		\end{equation}
+		
+		\begin{equation}
+			D(z) = \frac{y(z)}{x(z)} = b_0 + b_1z^{-1}+...+b_nz^{-n}
+			\label{eq-fir-02}
+		\end{equation}
 		
 		\begin{figure}[!htb]
 			\centering
@@ -182,7 +194,7 @@
 			\includegraphics[scale=0.5]{./figuras/FIR-diagrama-blocos.png}
 			\label{figura2-fir}}
 			\caption{Diagrama de fluxo de sinais e diagrama de blocos de um filtro FIR}
-			\label{fig01}	
+			\label{fig01-fir}	
 		\end{figure}
 		
 		O lóbulo principal da janela retangular tem aproximadamente a metade da largura do lóbulo principal da janela \textit{Hamming};
@@ -192,10 +204,12 @@
 		É devido a esta último ponto que a janela \textit{Hamming} reduz as oscilações na resposta em frequência de um filtro digital FIR. Todavia, há um preço a ser pago por esta melhoria, a saber, uma faixa de transição mais larga no espectro do filtro.\cite{haykin2001sinais}
 	
 		Vantagens:
-		\begin{itemize}
-			\item Um filtro não recursivo como o filtro FIR é inerentemente estável. Conforme pode ser visto na função de transferência ela é especificada em termos do zeros apenas no plano-z. Logo não há grandes preocupações em termos da escolha dos coeficientes que possam causar instabilidade no sistema, posto que seu LGR encontra-se estritamente dentro do semi-plano esquerdo do domínio-z.
+		\begin{enumerate}[(a)]
+			
+			\item Um filtro não recursivo como o filtro FIR é inerentemente estável. Conforme pode ser visto na função de transferência \ref{eq-fir-02} ela é especificada em termos do zeros apenas no plano-z. Logo não há grandes preocupações em termos da escolha dos coeficientes que possam causar instabilidade no sistema, posto que seu LGR encontra-se estritamente dentro do semi-plano esquerdo do domínio-z.
+			
 			\item O filtro FIR (resposta ao impulso) tem forma simétrica no seu espectro de frequência. Isso produz uma característica de fase linear ideal, ou seja, é equivalente a puramente um atraso temporal em todas as componentes de frequência passando pelo filtro. Em outras palavras, podemos dizer que o filtro FIR não tem \textit{distorção de fase} \cite{Lynn1998}.
-		\end{itemize}
+		\end{enumerate}
 	
 	\subsection{Filtros Adaptativos}
 	
@@ -316,7 +330,7 @@
 		
 		
 \section{Conversão Analógica Digital}
-	
+\label{secao-conv-analogica-digital}	
 	\subsection{Considerações Iniciais}
 		
 	\subsection{Conversão Por Aproximações Sucessivas}
