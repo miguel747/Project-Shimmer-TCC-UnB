@@ -13,7 +13,7 @@
 		
 		Essas amostras de som atrasadas e atenuadas ocorridas no evento da emissão do som original é o que denominamos de \textbf{reverbaração}.
 		
-		\begin{figure}[!ht]
+		\begin{figure}[!h b t]
 			\centering
 			\includegraphics[scale=0.5]{./figuras/reverb01.png}
 			\caption{Ilustração do efeito de Reverberação.}
@@ -22,7 +22,7 @@
 		
 		Muito embora possa parecer ao primeiro momento, o efeito de reverberação é muito mais que uma série de ecos. Um eco, por exemplo, pode ser entendido um resultado de uma distinção, atraso de versões de um som, o qual você pode ouvir com um atraso no mínimo de 40 milissegundos. Já a reverberação de uma sala vazia, por exemplo, há muitas e muitas reflexões, e as primeiras delas que chegam ao receptor são muito mais curtas que termos de tempo de duração. Logo essas reflexões não são tão percebidas ou distinguidas do som da fonte diretamente. Em vez disso, nós percebemos apenas o efeito da combinação de todas essas reflexões.
 		
-		\begin{figure}[!ht]
+		\begin{figure}[!h b t]
 			\centering
 			\includegraphics[scale=0.5]{./figuras/reverb02.png}
 			\caption{Resposta de um Impulso de uma sala pequena.}
@@ -37,7 +37,7 @@
 		Falando sob o aspecto musical e industrial de equipamentos que realizam o processamento e simulação de efeitos de repetição (tal como o reverb, delay) termos no mercado diversos tipos de \textit{reverb`s}, os quais possuem diferentes aplicações que veremos a seguir:
 		
 		\begin{itemize}
-			\item \textbf{Spring} ("Reverb-de-mola") - O efeito de reverberação com mola é um método que foi primeiramente proposto por \textit{Hammond} em 1940s. O reverb de mola foi criado naturalmente, por um sistema mecânico, o qual usa um transdutor e um captador nas extremidades de uma mola, para criar e capturar vibrações dentro dela. Muitos amplificadores de guitarra incluem esse tipo de reverberação dentro de seus projetos. Existem ainda muitos pedais de reverb que oferecem esse efeito emulado digitalmente e apenas algumas companhias, por questões de custo de construção, também lançaram produtos com um sistema real de reverb de molas.
+			\item \textbf{Spring} ("Reverb-de-mola") - O efeito de reverberação com mola é um método que foi primeiramente proposto por \textit{Hammond} em 1940s. O \textit{reverb} de mola foi criado naturalmente, por um sistema mecânico, o qual usa um transdutor e um captador nas extremidades de uma mola, para criar e capturar vibrações dentro dela. Muitos amplificadores de guitarra incluem esse tipo de reverberação dentro de seus projetos. Existem ainda muitos pedais de \textit{reverb} que oferecem esse efeito emulado digitalmente e apenas algumas companhias, por questões de custo de construção, também lançaram produtos com um sistema real de reverb de molas.
 			
 			\begin{figure}[! h]
 				\centering
@@ -144,10 +144,10 @@
 	Temos aqui na figura \ref{bloco-principal} um sinal analógico oriundo e um instrumento musical - guitarra, que passa por um processador de som digital - DSP o qual faz toda o trabalho de tratamento do sinal analógico convertido para amostras digitais. Aplicando, portanto, nesse contexto, um filtro de resposta finita; um algoritmo de seleção de frequências denominado \textit{pitch-shifter} e por fim realimentando o sistema acrescentando um pequeno atraso temporal (\textit{delay}).
 	
 	\begin{figure}[!h t b]
+		\label{bloco-principal}
 		\centering
 		\includegraphics[scale=0.5]{./figuras/diagrama_bloco_principal.PNG}
 		\caption{Diagrama de Blocos Principal do Projeto.}
-		\label{bloco-principal}
 	\end{figure}
 
 	Como uma lei de controle de malha fechada podemos ilustrar (figura \ref{signal_principal}) também como um diagrama de fluxo de sinais da seguinte forma:

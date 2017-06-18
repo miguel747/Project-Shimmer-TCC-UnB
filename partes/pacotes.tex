@@ -26,7 +26,7 @@
 \usepackage{multirow}
 \usepackage{pdfpages}
 \usepackage{lastpage}
-
+\usepackage{enumerate}
 
 %frames para notas
 \usepackage[framemethod=default]{mdframed}
@@ -34,6 +34,9 @@
 
 %configuracao de legendas para figuras e graficos
 \usepackage[labelfont=small,textfont={small,it}]{caption}
+
+%secao para codigos
+\usepackage[framed,numbered,autolinebreaks,useliterate]{mcode}
 
 
 
@@ -114,5 +117,5 @@ urlcolor=black
 		frametitleaboveskip=-\ht\strutbox,
 		frametitlealignment=\raggedright
 	}%
-	\begin{mdframed}[style=exampledefault]
-	}{\end{mdframed}}
+\begin{mdframed}[style=exampledefault]
+}{\end{mdframed}}

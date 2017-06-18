@@ -1,0 +1,130 @@
+\begin{lstlisting}
+
+	clc;
+	clear all;
+	info = audioinfo('guitar.wav')
+	[y,Fs] = audioread('guitar.wav','native');
+	voiceL = y(1:1000000,1);
+	%voiceR = y(:,2);
+	
+	for j = 1:15
+	voiceL = [voiceL, bitshift(voiceL(:,j),-1)]; % shift once to the right
+	%   voiceR = [voiceR, bitshift(voiceR(:,j),-1)];
+	end
+	
+	voice = [voiceL];%todas as taxas de bits por amostras de 16bits ate 1
+	%voice = voice/max(max(abs(voice)));
+	
+	output12bits = 2\^4.*voice(:,5);%coluna 5 da esquerda 12bits e 
+	%coluna 20 do audio direito tbm
+	%12bits
+	output10bits = 2\^6.*voice(:,7);
+	output8bits = 2\^8.*voice(:,9);
+	output4bits = 2\^12.*voice(:,13);
+	
+	audiowrite('guitar12bits.wav',output12bits,info.SampleRate);
+	audiowrite('guitar10bits.wav',output10bits,info.SampleRate);
+	audiowrite('guitar8bits.wav',output8bits,info.SampleRate);
+	audiowrite('guitar4bits.wav',output4bits,info.SampleRate);
+	
+	info = audioinfo('guitar12bits.wav')
+	info = audioinfo('guitar10bits.wav')
+	info = audioinfo('guitar8bits.wav')
+	info = audioinfo('guitar4bits.wav')
+	
+	
+	%Amostrando os sinais no tempo
+	figure(1)
+	hold on
+	t = linspace(0,1/info.SampleRate,length(voice));
+	plot(t,voice(:,1));%16 bits
+	%plot(t,output12bits);%12 bits
+	%plot(t,output10bits);%10 bits
+	plot(t,output8bits);%8 bits
+	%plot(t,output4bits);%4 bits
+	legend('sinal 16 bits','sinal 8 bits');
+	hold off;
+	
+	
+	% comparacao valores maximos
+	Max12bits = max(2\^4.*voice(:,5))
+	Max16bits = max(voice(:,1))
+	
+	%amostrando o sinal no dominio da freq
+	output12bits = double(output12bits);
+	Y1 =    fft(output12bits);
+	N = Fs;
+	transform = fft(output12bits,N)/N;
+	magtransform = abs(transform)/abs(max(abs(transform)));
+	num_bits = length(magtransform);
+	plot([0:1/(num_bits/2-1):1],magtransform(1:num_bits/2))
+	% faxis = linspace(-Fs/2,Fs/2,N);
+	% figure()
+	% plot(faxis,magtransform);
+	xlabel('frequency(Hz)')
+	
+	%projetar o filtro
+	[b,a] = butter(8,0.1,'low');
+	H = freqz(b,a,floor(num_bits/2));
+	hold on
+	figure()
+	plot([0:1/(num_bits/2 -1):1], abs(H),'r');
+	hold off
+	figure()
+	output12bits_filtrado = filter(b,a,output12bits);
+	plot(output12bits,'b')
+	hold on
+	plot(output12bits_filtrado,'r')
+	%normalizando
+	output12bits_filtrado = output12bits_filtrado/max(abs(output12bits_filtrado));
+	legend('audio 12 bits','audio 12bits filtrado');
+	audiowrite('guitar12bitsfiltrado.wav',output12bits_filtrado,info.SampleRate);
+	
+	hold off
+	%oitavador
+	guitar_oitavado = pitchShift(output12bits,1024,256,2);
+	guitar_oitavado_filter = filter(b,a,guitar_oitavado);
+	
+	%pequeno delay
+	leftout=output12bits;  % set up a new array, same size as old one
+	
+	N=100;  % delay amount N/44100 seconds
+	
+	for n=N+1:length(guitar_oitavado_filter)
+	
+	leftout(n)=output12bits(n)' + guitar_oitavado_filter(n-N);  % approximately 1/4 second echo
+	end
+	output12bits = double(output12bits);
+	Y1 =    fft(output12bits);
+	N = Fs;
+	transform = fft(output12bits,N)/N;
+	magtransform1 = abs(transform)/abs(max(abs(transform)));
+	num_bits = length(magtransform1);
+	plot([0:1/(num_bits/2-1):1],magtransform1(1:num_bits/2))
+	% faxis = linspace(-Fs/2,Fs/2,N);
+	% figure()
+	% plot(faxis,magtransform);
+	hold on
+	leftout = double(leftout);
+	Y1 =    fft(leftout);
+	N = Fs;
+	transform = fft(leftout,N)/N;
+	magtransform2 = abs(transform)/abs(max(abs(transform)));
+	num_bits = length(magtransform2);
+	plot([0:1/(num_bits/2-1):1],magtransform2(1:num_bits/2))
+	% faxis = linspace(-Fs/2,Fs/2,N);
+	% figure()
+	% plot(faxis,magtransform);
+	xlabel('frequency(Hz)')
+	figure()
+	plot(leftout)
+	hold on
+	plot(output12bits)
+	legend('sinal de 12 bits','sinal com pitchshift+delay')
+	leftout = leftout/max(abs(leftout));
+	output12bits = output12bits/max(abs(output12bits));
+	
+	audiowrite('shimmerA.wav',leftout,44100)
+
+}
+\end{lstlisting}

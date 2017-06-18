@@ -3,7 +3,11 @@
 
 \section{Sinais de Tempo Discreto e Transformada Discreta de \textit{Fourier}}
 
-	\subsection{Problema da Amostragem de Sinal Discreto}
+	\subsection{Problema da Amostragem de Sinal Contínuo}
+	\label{secao-sinal-continuo}
+	
+		Antes da abordagem do efeito seletivo em frequência em estudo, devemos abordar de forma sucinta um importante teorema que serve de ponte entre os mundos do tempo contínuo e de tempo discreto\footnote{Um sinal contínuo amostrado é uma sequência de impulsos, enquanto que um sinal em tempo discreto apresenta a mesma informação em uma sequência de números. Todos os conceitos aplicados a sinais amostrados se aplicam a sinais em tempo discreto.\cite{haykin2001sinais}}: O teorema da Amostragem. 
+		
 		Sabe-se que a transformada de Fourier de um sinal de tempo contínuo $x(t)$ é dada por:
 		
 		\begin{equation}
@@ -25,8 +29,12 @@
 		A transformada de Fourier neste caso para o sinal $x_s(t)$, pode ser obtida da seguinte forma:
 		
 		\begin{equation}
-			X_s(f) = \mathscr{F}[x(t)\delta_{T_s}(t)] = X(f)\ast\Delta_{T_s}(f) = X(f)\ast f_s\sum_{k=-\infty}^{\infty}\delta(f-kf_s) = \boxed{f_s\sum_{k=-\infty}^{\infty}X(f-kf_s)}
-			\label{eq:3}			
+			\begin{aligned}
+				&X_s(f) = \mathscr{F}[x(t)\delta_{T_s}(t)] = X(f)\ast\Delta_{T_s}(f)= 
+				\\
+				&X(f)\ast f_s\sum_{k=-\infty}^{\infty}\delta(f-kf_s) = \boxed{f_s\sum_{k=-\infty}^{\infty}X(f-kf_s)}
+				\label{eq:3}
+			\end{aligned}
 		\end{equation}
 		
 		Nota-se que o sinal $X_s(f)$ é periódico com período $f_s$ hertz. Considerando uma largura espectral do sinal $X(f)$ como B, em que $X(f) = 0$ para $|f|\ge f_s/2$ - isto é, $B \le f_s/2$, ou, de forma análoga $f_s \ge 2B$.
@@ -40,7 +48,7 @@
 		
 		Ou seja, se $f_s\ge 2B$, é possível obter X(f) a partir do sinal discreto $X_s(f)$ que, por consequência, reconstruir $x(t)$ a partir de $x_s(t)$. Esse resultado é conhecido como \textbf{teorema da amostragem}.
 		
-		No nosso caso concreto, teremos que utilizar esses conceitos para avaliar uma taxa de amostragem coerente bem como conceitos relativos ao tipo de método usado para representar digitalmente amostras de um sinal analógico.
+		No nosso caso concreto, teremos que utilizar esses conceitos para avaliar uma taxa de amostragem coerente bem como conceitos relativos ao tipo de método usado para representar digitalmente amostras de um sinal analógico, por exemplo o som da guitarra ou de uma amostra musical.
 		
 		Vale também salientar que o espectro $X_s(f)$ pode ser obtido calculando-se diretamente a transformada de Fourier de $x_s(t)$ usando-se as equações \eqref{eq:1} e \eqref{eq:2}, pode-se mostrar que:
 		
@@ -58,6 +66,10 @@
 		
 		
 		Nota-se que a equação \eqref{eq:6} pode ser usada também para o cálculo numérico de $X(f)$\footnote{A expressão dada equação \eqref{eq:6} para $X(f)$ é a mesma que se obtém utilizando a regra do trapézio para solucionar numericamente a equação \eqref{eq:1}, contudo com essa abordagem é mais difícil visualizar com clareza aspectos importantes e limitações desse cálculo numérico}.
+		
+		
+	\subsection{Efeito do Janelamento}
+	\label{secao-janelamento}
 		
 		Apesar dessa discretização do sinal ainda tratamos de um sinal com somatório infinito, que, em geral, não será possível de ser calculado. Portanto, esse somatório precisa ser truncado, e consequentemente, não se terá mais a igualdade da equação \eqref{eq:6}, mesmo que $X(f) = 0$ para $|f| \ge f_s/2$.
 		
@@ -135,7 +147,8 @@
 		Assim, o contexto de um filtro digital estará associado a equações de diferenças (ou funções de transferência no domínio Z) cujo parâmetros (coeficientes) serão calculados com o objetivo de discriminar (extrair, atenuar, etc.) determinadas componentes espectrais presentes em um sinal ou uma informação no mesmo sentido dos filtros analógicos, sem a necessidade de um circuito (\textit{hardware}) adicional. Em outras palavras, o filtro digital será uma rotina adicional agregada ao algoritmo responsável pela realização do sistema proposto em questão.
 		
 	\subsection{Filtros IIR}
-	\label{IIR-section}	
+	\label{secao-IIR-section}
+		
 		Os filtros digitais de resposta infinita ao impulso (\textit{Infinite Impulse Response - IIR}), também conhecidos como filtros recursivos ou autorregressivos, são modelados pela equação de diferença (\ref{eq1-iir}) ou pela função de transferência (\ref{eq2-iir-tf}), em que basicamente os valores dos coeficientes dos modelos define a natureza do filtro (passa-baixa; passa-alta; passa-faixa; rejeita-faixa).
 		
 		A denominação de IIR se deve que a saída do modelo decai para um valor nulo em um tempo infinito em resposta a um impulso aplicado na entrada filtro correspondente.
@@ -214,7 +227,7 @@
 		Vale salientar, que alguns sistemas de comunicação de voz utilizam filtros adaptativos com o objetivo de cancelar ou reduzir ecos ou barulhos do ambiente. Nesse contexto, foi pensado inicialmente a utilização desse modelo de filtro para o projeto. No entanto, será explicado mais a frente a não adoção desse modelo, bem como pela utilização de um filtro FIR típico.
 		
 	\subsection{Filtro Pente - \textit{Comb Filter}}
-	\label{comb-filter}
+	\label{secao-comb-filter}
 		
 		Em termos práticos \textit{comb filter} ou “filtro pente” é uma versão atrasada do mesmo sinal, causando uma  interferência construtiva ou destrutiva de dois sons tocados simultaneamente, porém com atraso entre um para o outro. 
 		
@@ -302,7 +315,33 @@
 		\end{mymdframed}
 		
 		
-\section{Conversão Analógica Digital}	
+\section{Conversão Analógica Digital}
+	
+	\subsection{Considerações Iniciais}
+		
+	\subsection{Conversão Por Aproximações Sucessivas}
+		
+		Resumidamente, conforme pode ser observado na figura \ref{conv-aprox-sucessivas1} este tipo de conversor utiliza uma técnica de realimentação para relacionar uma voltagem analógica de entrada com um código digital correspondente (conforme os N bits de resolução do conversor). No início do processo de conversão o \textit{shift register} e o \textit{holding register} são zerados. Na primeira etapa de conversão o MSB (bit mais significativo) do \textit{holding register} é colocado em	nível alto (1 lógico) e os demais mantidos em nível baixo (0 lógico). É, então, realizada uma comparação entre o resultado de saída do conversor D/A ($V_O$) e o sinal de entrada ($V_{IN}$). Se $V_O < V_IN$, o nível “1” é mantido para o MSB, caso contrário é substituído por “0”. A etapa seguinte repete o mesmo processo para o 2-SB. Isso continua até que todos os $N$ bits tenham sido verificados. A decisão de manter o nível lógico “1” ou substituir por “0” é realizada pelo comparador e pelo registrador de aproximação sucessiva. O controle lógico controla o início e o fim de cada etapa de aproximação e o resultado destas etapas são retidas no \textit{holding register}. O sinal de saída é válido apenas quando todo o processo for concluído e isto é sinalizado pelo sinal de \textit{status} do controle lógico.
+		
+		\begin{figure}[!ht]
+			\centering
+				\includegraphics[scale=0.5]{./figuras/aprox-sucessivas-conv-ad.png}
+				\caption{Conversor A/D de aproximações sucessivas.}
+				\label{conv-aprox-sucessivas1}
+		\end{figure}
+	
+	\subsection{Dificuldades Práticas de Conversores ADs}
+		
+		Apesar do princípio de funcionamento de um conversor AD ser relativamente simples, em suma, a operação desse dispositivo não é uma simples conexão de um sinal analógico na entrada de um microcontrolador. Listamos aqui algumas das dificuldades naturalmente encontradas:
+		
+		\begin{itemize}
+			\item \textbf{Intervalo de Tensão de Entrada}: Bem, se conectarmos uma guitarra que produz em seus captadores digamos valores em $\pm 100 mV$ nãó será possível conectar diretamente essa tensão num conversor de um microcontrolador que espera valores entre $1V$ a $3V$. Neste caso é necessário que o sinal da guitarra seja amplificado e modificado para que ele "ajuste-se" ao ADC.
+			
+			\item \textbf{Tensão de Referência}: Um ADC não tem uma noção absoluta de tensão, em outras palavras, sua tarefa é comparar sua entrada com a tensão de referência e sua saída numa proporção de 2. Assim, uma saída precisa recai na qualidade da referência e isso limita a acurácia\footnote{text} em geral.
+			
+			\item  \textbf{Ruído e filtragem}: Sinais no mundo real contém frequências indesejadas, no nosso caso, uma guitarra ligada numa cadeira de pedais com fontes de alimentação cuja frequência da rede elétrica gira torno de $50-60Hz$. Nesse caso filtros são necessários para remover esse ruído ainda de iniciar a conversão ADC propriamente dita. Vale apontar, conforme seção \ref{secao-janelamento} que um filtro passa-baixa é também necessário para evitar-se o efeito de \textit{aliasing}.
+		\end{itemize}
+			
 			
 
 \section{Conversão Digital Analógica}
