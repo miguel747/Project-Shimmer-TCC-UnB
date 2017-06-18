@@ -197,7 +197,29 @@
 			\label{fig01-fir}	
 		\end{figure}
 		
-		O lóbulo principal da janela retangular tem aproximadamente a metade da largura do lóbulo principal da janela \textit{Hamming};
+		
+		
+		
+		
+		Observando o exemplo da função \textit{Sinc}, nota-se que os valores das amplitudes desta tendem teoricamente aos limites não realizáveis $ -\infty < i < \infty $, conforme já mencionamos na seção \ref{secao-sinal-continuo}. Com a finalidade de truncar os valores correspondentes dos coeficientes dos filtros FIR associados em valores finitos, são empregadas funções janelas com este propósito e que tmabém influenciam as atenuações resultantes dos filtros. A tabela \ref{tabela-fir-01} mostra as principais funções janelas que são utilizadas nos projetos de filtros FIR, em que o valor prático de atenuação $\beta$ é indicado para cada função janela.
+		
+		\begin{center}
+			\begin{TAB}(r,0.5cm,2cm)[10pt]{|c|c|c|}{|c|c|c|c|c|c|}% (rows,min,max)[tabcolsep]{columns}{rows}
+				\textbf{Tipo de Janela}	& 	$\beta [dB]$	& \textbf{Função Janela: $w(n)$}\\ 
+				Retangular				& 		$-21$ 			& 	$1$							\\
+				Bartlett				&		$ -25 $			& $1-2\left(\frac{2|n-\frac{N}{2}|}{N}\right)$ \\
+				Hanning					&		$-44$			&	$\Large 0,5 - 0,5. cos\left(\frac{2\pi n}{N}\right)$\\
+				Hamming 				&		$-53$			&	$\Large 0,5 - 0,46. cos\left(\frac{2\pi n}{N}\right)$\\
+				Blackman 				&		$-74$			&	$\Large 0,42 - 0,5. cos\left(\frac{2\pi n}{N}\right) + 0,5. cos\left(\frac{4\pi n}{N}\right)$\\
+			\end{TAB}
+			\captionof{table}{Your caption here}
+			\label{tabela-fir-01}
+		\end{center}
+		
+		
+		Os valores das atenuacoes $\beta$ dependem tambem do numero de coeficientes $N$ utilizados em um filtro FIR, em que quanto menor esse numero mais compacta será a realização computacional do filtro correspondente.
+				
+		Um detalhe importante visto na figura () é que o lóbulo principal da janela retangular tem aproximadamente a metade da largura do lóbulo principal da janela \textit{Hamming};
 		
 		Os lóbulos laterais da janela \textit{Hamming}, em relação ao lóbulo principal, são muitos reduzidos em comparação com os da janela retangular. Especificamente, o pico de amplitude do primeiro lóbulo lateral da janela retangular está somente aproximadamente 13 dB abaixo do pico do lóbulo principal, ao passo que o valor correspondente para a janela \textit{Hamming} é de aproximadamente 40 dB.
 		
@@ -229,11 +251,11 @@
 			y(k) = \sum_{m=0}^{M} W_m(k)x(k-m)
 		\end{equation}
 		
-		A diferença ou erro $\epsilon(k)$ entre o valor de padrão desejado d(k) para a a resposta do filtro e a informação da saída atual $y(k)$ do modelo associado é expressa por:
+		A diferença ou erro $e(k)$ entre o valor de padrão desejado $d(k)$ para a a resposta do filtro e a informação da saída atual $y(k)$ do modelo associado é expressa por:
 		
 		\begin{equation}
 			\label{eq2-filtroadap}
-			\epsilon(k) = d(k)- y(k)
+			e(k) = d(k)- y(k)
 		\end{equation}
 		
 		Basicamente para ajustar os valores dos coeficientes de um filtro adaptativo tipicamente utiliza o método do gradiente para essa finalidade (fonte....), sendo o critério da somatória do erro quadrático de $\epsilon_(k)$ frequentemente utilizado na etapa de adaptação.
