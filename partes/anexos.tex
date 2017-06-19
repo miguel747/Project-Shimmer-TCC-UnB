@@ -1,5 +1,5 @@
+Code: "audio.m": Código MATLAB responsável pela realização do efeito shimmer numa amostra de Áudio:
 \begin{lstlisting}
-
 	clc;
 	clear all;
 	info = audioinfo('guitar.wav')
@@ -125,6 +125,91 @@
 	output12bits = output12bits/max(abs(output12bits));
 	
 	audiowrite('shimmerA.wav',leftout,44100)
+\end{lstlisting}
 
-}
+Code: "mcp4725.c" - Cálculo do Conversor DAC de 12 bits. (amostragem Linear):
+\begin{lstlisting}
+	#include <msp430.h> 
+	#include <stdint.h>
+	#include "mcp4725.h"
+	#include "lib/lcd/lcd.h"
+	#include "lib/dma/dma.h"
+	#include "lib/port/port.h"
+	#include "lib/clock/clock.h"
+	#include "lib/adc12/adc12.h"
+	#include "lib/timers/timer.h"
+	#include "lib/serial/serial.h"
+	
+	#define MCP4725 0x62
+	#define mcpON      0
+	#define mcpOFF1K   1
+	#define mcpOFF100K 2
+	#define mcpOFF500K 3
+	
+	uint16_t adcResult;
+	uint16_t data = 0, write;
+	
+	int main(void) {
+	watchDogStop();
+	portInit();
+	
+	lcdInit();
+	lcdClear();
+	
+	clockInit();
+	clockSetDCO(1000000);
+	clockSelect(DCO, SMCLK);
+	clockSelect(DCO,  MCLK);
+	
+	adc12Init();
+	portRoute2Perif(P6,0);
+	
+	//timerSetup(B0,ACLK,UP,3276,1000);
+	TB0CTL   = TBSSEL__ACLK    |            // Select ACLK as clock source
+	MC__UP          |            // Setup but do not count
+	TBCLR;                       // Clear timer
+	
+	TB0CCR0  = 327;                        // Convert every 100ms
+	TB0CCR1  = 100;                        // This can be anything
+	TB0CCTL0 = CCIE;
+	TB0CCTL1 = OUTMOD_3;                    // Set/reset
+	
+	dmaEnable(0);
+	dmaTrgr(0,DMA_ADC12IFGx);
+	dmaAddr(0,&ADC12MEM0,DMA_FIXED,&adcResult,DMA_FIXED);
+	dmaMode(0,DMA_RPT_SINGLE_TRANSFER);
+	dmaSize(0,1);
+	
+	serialInit(I2C);
+	
+	__enable_interrupt();
+	
+	//mcpWrite(0x2FF);
+	
+	volatile uint16_t recData[4096];
+	uint16_t index = 4096;
+	
+	while(index) {
+	while(!write);
+	recData[--index] = adcResult;
+	mcpWrite(index);
+	write = 0;
+	}
+	while(1);
+	}
+	
+	void mcpWrite(uint16_t data) {
+	uint8_t vector[2];
+	vector[0] = (data >> 8) & 0x0F;
+	vector[1] = (data     ) & 0xFF;
+	serialI2CSendData(MCP4725, vector, 2);
+	}
+	
+	#pragma vector=TIMER0_B0_VECTOR
+	__interrupt void isr_tb0_ccr0 () {
+	write = 1;
+	adcDisable();
+	adcEnable();
+	}
+	
 \end{lstlisting}

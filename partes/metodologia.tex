@@ -184,6 +184,9 @@
 			\label{eq-fir-02}
 		\end{equation}
 		
+		
+		A forma usual de calcular os coeficientes de um filtro digital FIR consiste em utilizar modelos de respostas ideais dos filtros e funções janelas associadas.
+		
 		\begin{figure}[!htb]
 			\centering
 			\subfigure[\textbf{fluxo de sinais}]{
@@ -197,35 +200,26 @@
 			\label{fig01-fir}	
 		\end{figure}
 		
-		
-		
-		
-		
-		Observando o exemplo da função \textit{Sinc}, nota-se que os valores das amplitudes desta tendem teoricamente aos limites não realizáveis $ -\infty < i < \infty $, conforme já mencionamos na seção \ref{secao-sinal-continuo}. Com a finalidade de truncar os valores correspondentes dos coeficientes dos filtros FIR associados em valores finitos, são empregadas funções janelas com este propósito e que tmabém influenciam as atenuações resultantes dos filtros. A tabela \ref{tabela-fir-01} mostra as principais funções janelas que são utilizadas nos projetos de filtros FIR, em que o valor prático de atenuação $\beta$ é indicado para cada função janela.
+						
+		Observando o exemplo da função \textit{Sinc}, nota-se que os valores das amplitudes desta tendem teoricamente aos limites não realizáveis $ -\infty < i < \infty $, conforme já mencionamos na seção \ref{secao-sinal-continuo}. Com a finalidade de truncar os valores correspondentes dos coeficientes dos filtros FIR associados em valores finitos, são empregadas funções janelas com este propósito e que também influenciam as atenuações resultantes dos filtros. A tabela \ref{tabela-fir-01} mostra as principais funções janelas que são utilizadas nos projetos de filtros FIR, em que o valor prático de atenuação $\beta$ é indicado para cada função janela.
 		
 		\begin{center}
 			\begin{TAB}(r,0.5cm,2cm)[10pt]{|c|c|c|}{|c|c|c|c|c|c|}% (rows,min,max)[tabcolsep]{columns}{rows}
 				\textbf{Tipo de Janela}	& 	$\beta [dB]$	& \textbf{Função Janela: $w(n)$}\\ 
 				Retangular				& 		$-21$ 			& 	$1$							\\
 				Bartlett				&		$ -25 $			& $1-2\left(\frac{2|n-\frac{N}{2}|}{N}\right)$ \\
-				Hanning					&		$-44$			&	$\Large 0,5 - 0,5. cos\left(\frac{2\pi n}{N}\right)$\\
-				Hamming 				&		$-53$			&	$\Large 0,5 - 0,46. cos\left(\frac{2\pi n}{N}\right)$\\
-				Blackman 				&		$-74$			&	$\Large 0,42 - 0,5. cos\left(\frac{2\pi n}{N}\right) + 0,5. cos\left(\frac{4\pi n}{N}\right)$\\
+				Hanning					&		$-44$			&	$\Large 0,5 + 0,5. cos\left(\frac{2\pi n}{N}\right)$\\
+				Hamming 				&		$-53$			&	$\Large 0,5 + 0,46. cos\left(\frac{2\pi n}{N}\right)$\\
+				Blackman 				&		$-74$			&	$\Large 0,42 + 0,5. cos\left(\frac{2\pi n}{N}\right) + 0,5. cos\left(\frac{4\pi n}{N}\right)$\\
 			\end{TAB}
-			\captionof{table}{Your caption here}
+			\captionof{table}{Função janela (\textit{window}) associadas com filtros FIR}
 			\label{tabela-fir-01}
 		\end{center}
-		
-		
-		Os valores das atenuacoes $\beta$ dependem tambem do numero de coeficientes $N$ utilizados em um filtro FIR, em que quanto menor esse numero mais compacta será a realização computacional do filtro correspondente.
-				
-		Um detalhe importante visto na figura () é que o lóbulo principal da janela retangular tem aproximadamente a metade da largura do lóbulo principal da janela \textit{Hamming};
-		
-		Os lóbulos laterais da janela \textit{Hamming}, em relação ao lóbulo principal, são muitos reduzidos em comparação com os da janela retangular. Especificamente, o pico de amplitude do primeiro lóbulo lateral da janela retangular está somente aproximadamente 13 dB abaixo do pico do lóbulo principal, ao passo que o valor correspondente para a janela \textit{Hamming} é de aproximadamente 40 dB.
-		
-		É devido a esta último ponto que a janela \textit{Hamming} reduz as oscilações na resposta em frequência de um filtro digital FIR. Todavia, há um preço a ser pago por esta melhoria, a saber, uma faixa de transição mais larga no espectro do filtro.\cite{haykin2001sinais}
 	
-		Vantagens:
+		
+		Os valores das atenuações $\beta$ dependem também do numero de coeficientes $N$ utilizados em um filtro FIR, em que quanto menor esse numero mais compacta será a realização computacional do filtro correspondente.
+				
+		Vantagens gerais do filtro FIR:
 		\begin{enumerate}[(a)]
 			
 			\item Um filtro não recursivo como o filtro FIR é inerentemente estável. Conforme pode ser visto na função de transferência \ref{eq-fir-02} ela é especificada em termos do zeros apenas no plano-z. Logo não há grandes preocupações em termos da escolha dos coeficientes que possam causar instabilidade no sistema, posto que seu LGR encontra-se estritamente dentro do semi-plano esquerdo do domínio-z.
@@ -233,6 +227,77 @@
 			\item O filtro FIR (resposta ao impulso) tem forma simétrica no seu espectro de frequência. Isso produz uma característica de fase linear ideal, ou seja, é equivalente a puramente um atraso temporal em todas as componentes de frequência passando pelo filtro. Em outras palavras, podemos dizer que o filtro FIR não tem \textit{distorção de fase} \cite{Lynn1998}.
 		\end{enumerate}
 	
+		Diante dessa análise de escolha do janelamento o procedimento típico de cálculo de coeficientes de um filtro FIR, é essencial especificar os valores de frequências e atenuações associadas aos tipos de janelas a serem utilizadas, o número de coeficientes e o tempo de amostragem (ou frequência de amostragem $ f_a = 1/T $ correspondente).
+		
+		\begin{exem}
+			\label{exemplo-fir-01}
+			Um pequeno exemplo de aplicação do projeto de filtro digital FIR (passa-baixa) e uma função de janela Blackman, considerando uma quantidade de 7 (sete coeficientes) chamado comumente de Tap's.
+			
+			Considerando uma taxa de amostragem igual a $fa= 200 Hz$ e uma frequência de corte $ f_c = f_1 = 40 Hz $, têm-se: $ f_{norm} = f_1/(f_a/2) = 0.4 $; $ \omega_1 = 0.4\pi $. Computando a resposta ideal do filtro em questão, num intervalo $-(N-1)/2 \leq n \leq (N-1)/2$ com a função janela especificada $J(n)$ (\textit{Blackman} - tabela \ref{tabela-fir-01}).
+			
+			\mcode{(for n=-3; n < 4; n++) 
+				$0,42 + 0,5. cos\left(\frac{2\pi n}{7}\right) + 0,5. cos\left(\frac{4\pi n}{7}\right)$
+			}
+			
+			Pode-se computar a resposta ideal de um filtro passa baixa cuja função é descrita como:
+			
+			\begin{equation}
+			\label{eq-passa-baixa-fir}
+			h(n) = \frac{sen(w_1 n)}{\pi n}
+			\qquad
+			h(0) = \frac{w_1}{\pi}
+			\end{equation}
+			
+			Daí, finalmente, temos os valores dos coeficientes do filtro:
+			
+			\[b(n) = J(n).h(n)\]
+			
+			\begin{lstlisting}
+			%% Codigo para calculos dos coeficientes de um filtro FIR
+			N = 51; f1 = 40; fa=200; fn= f1/(fa/2); W1=pi*fn; %parametros e normalizacao
+			n = -(N-1)/2:(N+1)/2; h= (W1/pi)*sinc((W1/pi)*n); %Resposta ideal do FPB
+			%% Funcao Janela
+			J = 0.42 + 0.5*cos(2*pi*n/N) + 0,08*cos(4*pi*n/N); b = J.*h;
+			freqz(b,1,[0:1:100],fa); figure %Reposta em frequencia do filtro
+			t= 0:(1/fa):0.5; x = 2 + 0.1*sin(2*pi*60*t); %Entrada do filtro
+			y = filter(b,1,x); %acao da filtragem;
+			plot(t,x,'k:'); hold
+			stairs(t,y,'k'); hold off
+			xlabel('t[s]'); ylabel('x(t)="..."; y(t)= "___" ');
+			\end{lstlisting}
+			
+		\end{exem}
+		
+		\begin{figure}[!ht]
+			\label{fig01-exemplo-fir}
+			\centering
+			\includegraphics[scale=0.5]{./figuras/simulacoes/resp-freq-fir-exemplo.png}
+			\caption{Resposta em frequência do FPB-FIR do exemplo \ref{exemplo-fir-01} para N=51.}
+		\end{figure}
+		
+		\begin{figure}[!ht]
+			\label{fig02-exemplo-fir}
+			\centering
+			\includegraphics[scale=0.5]{./figuras/simulacoes/acao-filtragem-fir-exemplo.png}
+			\caption{Ação da filtragem do FPB-FIR do exemplo \ref{exemplo-fir-01}}
+		\end{figure}
+		
+		Vale destacar nesse exemplo que, por conta da janela \textit{Blackman} ter 1 termo a mais na sua expressão de cálculo de coeficientes comparado a outros modos de janela (um termo cosseno extra), em outras palavras, mais termos indica mais acurácia nos resultados. Ademais, esse termo adicional também reduz os termos dos lóbulos laterais, melhorando assim o tamanho do lóbulo principal \cite{Chakraborty2013}.
+		
+		Outro detalhe importante, conforme visto na figura \ref{fig-janelamento-01}, é que o lóbulo principal, por exemplo, da janela retangular tem aproximadamente a metade da largura do lóbulo principal da janela \textit{Hamming};
+		
+		\begin{figure}[!ht]
+			\centering
+			\includegraphics[scale=1]{./figuras/janelas-exemplos.png}
+			\caption{Resposta em frequência dos modos de Janelamento.}
+			\label{fig-janelamento-01}
+		\end{figure}
+		
+		De maneira análoga, os lóbulos laterais da janela \textit{Hamming}, em relação ao lóbulo principal, são muitos reduzidos em comparação com os da janela retangular. Especificamente, o pico de amplitude do primeiro lóbulo lateral da janela retangular está somente aproximadamente 13 dB abaixo do pico do lóbulo principal, ao passo que o valor correspondente para a janela \textit{Hamming} é de aproximadamente 40 dB.
+		
+		É devido a esta último ponto que a janela \textit{Hamming} reduz as oscilações na resposta em frequência de um filtro digital FIR. Todavia, há um preço a ser pago por esta melhoria, a saber, uma faixa de transição mais larga no espectro do filtro.\cite{haykin2001sinais}
+	
+		
 	\subsection{Filtros Adaptativos}
 	
 		Os filtros adaptativos são constituídos, geralmente, por estruturas FIR, em que os coeficientes dos modelos associados são modificados conforme um procedimento adaptativo. essa modalidade de filtro geralmente é empregada nos seguintes contextos (\textit{lista não exaustiva}):
@@ -262,6 +327,8 @@
 		
 		Vale salientar, que alguns sistemas de comunicação de voz utilizam filtros adaptativos com o objetivo de cancelar ou reduzir ecos ou barulhos do ambiente. Nesse contexto, foi pensado inicialmente a utilização desse modelo de filtro para o projeto. No entanto, será explicado mais a frente a não adoção desse modelo, bem como pela utilização de um filtro FIR típico.
 		
+		
+		
 	\subsection{Filtro Pente - \textit{Comb Filter}}
 	\label{secao-comb-filter}
 		
@@ -269,7 +336,7 @@
 		
 		Nesse sentido, há basicamente dois tipos de \textit{comb filters}: o (\textit{feedback comb filter}) e (\textit{feedforward comb filter}). Resumidamente, os nomes referem-se à direção em que os sinais são atrasados antes de serem adicionados à entrada. O primeiro tipo considera em adicionar a saída do filtro a entrada imediatamente posterior, enquanto o segundo considera apenas adicionar à saída do filtro as entradas presente e a mesma entrada atrasada.
 		
-		\begin{figure}[hbt]
+		\begin{figure}[!ht]
 			\centering
 			\subfigure[\textbf{Feedback comb-filter}]{
 				\includegraphics[scale=0.5]{./figuras/Comb_filter_feedback.png}
