@@ -83,14 +83,41 @@
 			Por conseguinte, com SHP = 1 temos o modo de amostragem temporizada. O tempo de amostragem será determinado por um \textit{timer} interno, que é configurado de acordo com os bits SHT1x e SHT0x (registrador ADC12CTL0). Os \textit{bits} SHT1x determinam o tempo de amostragem (em ciclos de clock do conversor) para as memórias ADC12MEM8 até ADC12MEM15, tal como os \textit{bits} SHT0x determinam o tempo de amostragem para as memórias ADC12MEM0 até ADC12MEM7.
 			
 			Em suma, calculado o tempo de amostragem 
-		
-		
-		
-		
-	
+			
 \section{Bloco 1 - Projetando um Filtro FIR}
-	\subsection{Comunicação Serial}
+
 		
 \section{Bloco 2 - Implementando o \textit{Pitch-Shifter}}
 
 \section{Bloco 3 - Delay Time}
+
+\section{Bloco 5 - Conversão D/A - Comunicação $I^2C$ e MCP4725}
+	
+	
+	\subsection{Limitações do MSP430F5529LP}
+		
+		Dentro do contexto do projeto de avaliação de desempenho de um microcontrolador no processamento de sinais digitais de áudio, o modelo em questão não possui um conversor Digital Analógico Integrado. Dessa forma é necessário um módulo externo responsável para a conversão das amostras digitais do $\mu C$.
+		
+	\subsection{Características do \textit{Hardware} e Operação}
+	
+		A interface $ I^2C $ implementada nos MSP430 possui as seguintes características, dentre outras:
+		\begin{itemize}
+			\item Transferencia de \textit{byte} e \textit{word};
+			\item Suporte de endereçamento de 7 a 10 bits;
+			\item Velocidade de 100 a 400 Kbps;
+		\end{itemize}
+	
+		A operação da interface \textit{USART} no modo $ I^2C $ é selecionada pelos \textit{bits} UxCTL:SYNC = 1 e UxCTL:I2C = 1. O módulo do MSP430F5529 pode funcionar em quatro modos de comunicação: transmissor mestre, receptor mestre, transmissor escravo e receptor escravo. No caso do projeto, precisamos apenas avaliar o desempenho do modo transmissor mestre pois apenas enviaremos os dados ao MCP4725.
+		
+		A seleção entre a operação no modo mestre é feita pelo \textit{bit} U0CTL:MST: que em nível "1" teremos o modo ativado. A seleção entre a transmissão é feita pelo bit I2CTCTL:TRX, a qual depende do modo de operação da $ I^2C $: Para o modo mestre e modo de transmissão teremos TRX=1.
+		
+		Além disso, quando o módulo funciona como transmissor, existem ainda duas possibilidades de operação: a contagem automática do número de \textit{bytes} transmitidos (\textit{bit} 12CTCTL:I2CRM=0) ou controle manual dessa operação (\textit{bit} I2CTCTL:I2CRM = 1). O controle automático do número de butes transmitidos utiliza um registrador para armazenar a quantidade total de butes a ser transmitida (excluindo-se o primeiro de controle). Um contador interno é inicializado com o valor desse registrador e decrementado a cada \textit{byte} transmitido. Quando o contador chega a zero, a transmissão pode ser automaticamente finalizada por uma condição de parada.
+		
+		Assim, os passos para realizar uma transmissão utilizando o modo mestre com contagem automá
+		
+			
+		
+		
+		 
+		
+		

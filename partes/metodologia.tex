@@ -450,6 +450,37 @@
 \section{Conversão Digital Analógica}
 
 \section{Comunicação Serial I2C}
+	O protocolo $I^2C$ (Inter Integrated Communication ou Comunicação entre Integrados) é um protocolo síncrono half duplex a dois fios do tipo mestre-escravo, criado pela \textit{Philips} com objetivo de facilitar o desenvolvimento de sistemas modulares para televisores e outros aparelhos eletrônicos de consumo geral \cite{bibid}.
+	
+	O funcionamento do protocolo baseia-se em alguns princípios básicos e usa duas linhas bidirecionais:
+	
+	\begin{itemize}[\bullet]
+		\item Serial data (SDA);
+		\item Serial Clock (SCL).
+	\end{itemize}
+	
+	\begin{enumerate}
+		\item A informação presente na linha de dados (SDA) somente 
+		e lida durante a fase alta da linha de clock (SCL);
+		\item Somente é permitido alterar o nível da linha de dados (SDA) durante a fase baixa da linha de \textit{clock} (SCL).
+		\item Quando o barramento não está em uso, ambas as linhas permanecem desligadas (e, portanto forças as em nível "1" pelos resistores de \textit{pull-up}).
+	\end{enumerate}
+
+	\subsection{Formato de Dados}
+	
+		Como o protocolo em questão permite a coexistência de diversos dispositivos em um mesmo barramento, é necessário que cada um possua identificação ou endereço próprio.
+		
+		O formato básico de um comando $I^2C$ é constituído por $ 7 $ \textit{bits} de endereço\footnote{Existem uma extensão de endereçamento utilizando $10-bits$ mas são raras as redes de dispositivos $ I^2C $ que consigam esgotar a quantidade de endereços de $ 7-bit $, ou seja, raramente essa possibilidade é utilizada.}, utilizados para especificar o dispositivo escravo a ser acessado, seguidos por um \textit{bit} indicador de leitura/escrita, em geral é o LSB, chamado de $R/\hat{W}$
+		
+		\begin{itemize}
+			\item $ R/\hat{W} $ = 0: significa que o modo mestre escreverá dados no dispositivo em modo escravo. O mestre é o transmissor e o escravo o receptor\footnote{Em todos os casos o dispositivo \textit{master} é responsável por toda a transmissão}. 
+		\end{itemize}
+		
+		Normalmente o endereço de 7 \textit{bits} é composto por duas partes: a primeira, de 4 \textit{bits}, especifica o tipo de dispositivo escravo a ser acessado, no nosso caso o endereço do dispositivo MCP 4725. A segunda, de 3 \textit{bits}, especifica um entre até oito dispositivos daquele tipo, o qual poderá ser acessado.
+		
+		
+	
+	
 	
 \section{Ferramentas Computacionais}
 
