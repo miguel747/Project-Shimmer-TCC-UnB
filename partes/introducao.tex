@@ -39,7 +39,7 @@
 		\begin{itemize}
 			\item \textbf{Spring} ("Reverb-de-mola") - O efeito de reverberação com mola é um método que foi primeiramente proposto por \textit{Hammond} em 1940s. O reverb de mola foi criado naturalmente, por um sistema mecânico, o qual usa um transdutor e um captador nas extremidades de uma mola, para criar e capturar vibrações dentro dela. Muitos amplificadores de guitarra incluem esse tipo de reverberação dentro de seus projetos. Existem ainda muitos pedais de reverb que oferecem esse efeito emulado digitalmente e apenas algumas companhias, por questões de custo de construção, também lançaram produtos com um sistema real de reverb de molas.
 			
-			\begin{figure}[! h]
+			\begin{figure}[!h]
 				\centering
 				\includegraphics[scale=0.3]{./figuras/spring-reverb.jpg}
 				\caption{Câmara de reverb de mola de um amplificador}
@@ -52,7 +52,7 @@
 			
 			\item \textbf{Plate} ("Reverb-de-placas") - Um plate reverb é definitivamente o efeito que exige uma grande logística a ser empregada. Uma grande máquina conforme mostrado na figura () a qual fornece o áudio dentro de grandes "placas" penduradas de metal que produzem um som de reverb que é mais definido do que o efeito do hall-reverb enquanto ainda é capaz de produzir longos decaimentos no tempo.
 			
-			\begin{figure}[! h]
+			\begin{figure}[!h]
 				\centering
 				\includegraphics[scale=0.3]{./figuras/plate-reverb.jpg}
 				\caption{Pequeno protótipo de um reverb de placas.}
@@ -137,11 +137,13 @@
 	Além disso, o projeto teve uma participação do desempenho do TSM320 C2000 o qual, devido ao tempo de aprendizagem do DSP para correta aplicabilidade no projeto, não fora possível. %melhorar o texto
 
 
-\section{Diagrama de Bloco do Projeto}
+\section{Objetivos e Diagrama de Bloco do Projeto}
 
-	Nesta parte do trabalho, é mostrado de maneira abstrata os blocos necessários para que obtenha a saída do sistema desejado, ou seja, o efeito do \textit{Reverb} com \textit{Shimmer} implementado em software e executado em hardware.
+	Nosso objetivo neste trabalho é o estudo e a realização de um projeto, desenvolvido em \textit{software} e futuramente aplicado em \textit{hardware}, de um efeito digital de aúdio seletivo em frequência que tem como característica musical a repetição assíncrona do som (reverb) com destaque na utilização de componentes de frequências (harmonicas) na realização desse efeito (\textit{shimmer}).
 	
-	Temos aqui na figura \ref{bloco-principal} um sinal analógico oriundo e um instrumento musical - guitarra, que passa por um processador de som digital - DSP o qual faz toda o trabalho de tratamento do sinal analógico convertido para amostras digitais. Aplicando, portanto, nesse contexto, um filtro de resposta finita; um algoritmo de seleção de frequências denominado \textit{pitch-shifter} e por fim realimentando o sistema acrescentando um pequeno atraso temporal (\textit{delay}).
+	Nesta parte do trabalho, será mostrado de maneira abstrata os blocos necessários para que obtenha a saída do sistema desejado , ou seja, o efeito do \textit{Reverb} com \textit{Shimmer} implementado em software e executado seja em software ou em hardware.
+		
+	Temos aqui na figura \ref{bloco-principal} um sinal analógico oriundo e um instrumento musical - guitarra, que passa por um processador de som digital - DSP, o qual procede com todo o trabalho tratamento desse sinal analógico ora convertido amostras digitais. Aplicando, portanto, nesse contexto, um filtro de resposta finita; um algoritmo de seleção de frequências denominado \textit{pitch-shifter} e por fim realimentando o sistema acrescentando um pequeno atraso temporal (\textit{delay}).
 	
 	\begin{figure}[!h t b]
 		\centering
@@ -149,7 +151,9 @@
 		\caption{Diagrama de Blocos Principal do Projeto.}
 		\label{bloco-principal}
 	\end{figure}
+	
 
+	%----------------------------------
 	Como uma lei de controle de malha fechada podemos ilustrar (figura \ref{signal_principal}) também como um diagrama de fluxo de sinais da seguinte forma:
 	
 	\begin{figure}[!h t b]
@@ -159,6 +163,7 @@
 		\label{signal_principal}
 	\end{figure}
 	
+	Não obstante ao modelo apresentado,
 	
 	
 	

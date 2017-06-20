@@ -1,11 +1,27 @@
 \chapter{Conclusões}
 
- 
-	Relembrar os objetivos
-	
+ 			
 	\section{Realização do Projeto}
+	\label{realizacao-projeto}
+		O projeto foi executado dentro das limitações impostas de hardware do uC MSP430F5529LP no quesito de seu desempenho de conversão digital analógica, bem como suas interrupções, período de amostragem bem como sua integração com o conversor Digital-Analógico MCP4725 através da interface $ I^2C $.
+		
+		Não foram avaliados, no entanto, o desempenho do dispositivo na aplicação dos filtros digitais e o modelo ora projetado no \textit{software} Matlab que demonstrou o efeito de \textit{reverb-shimmer} em si. Muito embora, essa parte do projeto estivesse dentro do escopo inicial do trabalho, a sua realização se daria com melhores resultados com a utilização de um DSP específico para esta aplicação, nesse caso a utilização do TMS320F2837xS $\text{Delfino}^{TM}$.
+		
+		Foram constatados que o efeito \textit{reverb-shimmer} possui uma grande complexidade em termos de estabilidade, pois, conforme observado nas simulações, a malha de realimentação com o bloco de \textit{delay`s} aleatórios podem deixar o sistema instável e com isso efeitos indesejados no resultado final.
+		
+		Dentro dessa realidade podemos dizer que o objetivo do trabalho foi alcançado com respeito ao entendimento claro do modelo matemático e suas implicações na escolha de se projetar um efeito seletivo em frequência, entender suas limitações dentro do contexto de filtros digitais, seu critério de estabilidade e consubstanciar elementos necessários para que seja aplicado dentro de um contexto de projeto de \textit{hardware}.
 	
 	\section{Auto-Crítica}
-	
+		Considerando a seção \ref{realizacao-projeto}, vale destacar, por ora, que a realização em hardware foi a maior dificuldade encontrada dentro do projeto por conta das escolhas dos parâmetros limitantes, tais como:
+		
+		\begin{enumerate}
+			\item Resolução da conversão - 12 bits;
+			\item Período de Amostragem do \textit{Timer};
+			\item Imprecisão nas amostras coletadas;
+			\item Impossibilidade de trabalhar com ponto flutuante.
+		\end{enumerate}
+		
+		Diante disso foi necessário concluir o trabalho apenas entendendo as limitações de hardware e escolhendo seus parâmetros baseado nos conceitos de processamento digitais de sinais e não apenas em testes cegos de desempenho. Por outro lado, não se avaliou o desempenho com os códigos ora projetados no MATLAB para o uC em questão, mesmo este sendo o modelo mais modesto.
+		
 	\section{Modelos para Trabalhos Futuros}
 	
