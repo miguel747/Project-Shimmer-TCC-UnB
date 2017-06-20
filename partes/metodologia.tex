@@ -454,7 +454,7 @@
 	
 	O funcionamento do protocolo baseia-se em alguns princípios básicos e usa duas linhas bidirecionais:
 	
-	\begin{itemize}[\bullet]
+	\begin{itemize}
 		\item Serial data (SDA);
 		\item Serial Clock (SCL).
 	\end{itemize}
@@ -470,10 +470,10 @@
 	
 		Como o protocolo em questão permite a coexistência de diversos dispositivos em um mesmo barramento, é necessário que cada um possua identificação ou endereço próprio.
 		
-		O formato básico de um comando $I^2C$ é constituído por $ 7 $ \textit{bits} de endereço\footnote{Existem uma extensão de endereçamento utilizando $10-bits$ mas são raras as redes de dispositivos $ I^2C $ que consigam esgotar a quantidade de endereços de $ 7-bit $, ou seja, raramente essa possibilidade é utilizada.}, utilizados para especificar o dispositivo escravo a ser acessado, seguidos por um \textit{bit} indicador de leitura/escrita, em geral é o LSB, chamado de $R/\hat{W}$
+		O formato básico de um comando $I^2C$ é constituído por $ 7 $ \textit{bits} de endereço\footnote{Existem uma extensão de endereçamento utilizando $10-bits$ mas são raras as redes de dispositivos $ I^2C $ que consigam esgotar a quantidade de endereços de $ 7-bit $, ou seja, raramente essa possibilidade é utilizada.}, utilizados para especificar o dispositivo escravo a ser acessado, seguidos por um \textit{bit} indicador de leitura/escrita, em geral é o LSB, chamado de $R/\widebar{W}$
 		
 		\begin{itemize}
-			\item $ R/\hat{W} $ = 0: significa que o modo mestre escreverá dados no dispositivo em modo escravo. O mestre é o transmissor e o escravo o receptor\footnote{Em todos os casos o dispositivo \textit{master} é responsável por toda a transmissão}. 
+			\item $ R/\widebar{W} $ = 0: significa que o modo mestre escreverá dados no dispositivo em modo escravo. O mestre é o transmissor e o escravo o receptor\footnote{Em todos os casos o dispositivo \textit{master} é responsável por toda a transmissão}. 
 		\end{itemize}
 		
 		Normalmente o endereço de 7 \textit{bits} é composto por duas partes: a primeira, de 4 \textit{bits}, especifica o tipo de dispositivo escravo a ser acessado, no nosso caso o endereço do dispositivo MCP 4725. A segunda, de 3 \textit{bits}, especifica um entre até oito dispositivos daquele tipo, o qual poderá ser acessado.
@@ -487,3 +487,61 @@
 	\subsection{\textit{Code Compose Studio}}
 	
 	\subsection{\textit{WinFilter}}
+	
+		O \textit{WinFilter} é uma ferramenta de \textit{software} criada com o objetivo de provê a realização de projetos de filtros digitais. Ele possui uma interface gráfica bastante simples e bem intuitiva \cite{Kundert2004}. Esse \textit{software} pode facilmente projetar filtros IIR, bem como filtros FIR e ainda pode gerar códigos do projeto em linguagem C e também em código VHDL. Os modelos de filtro digitais, no entanto, são limitados a apenas esses modelos abaixo:
+		
+		\begin{itemize}
+			\item \textit{Butterwoth};
+			\item \textit{Chebyshev I};
+			\item \textit{Bessel};
+			\item Retagunlar; e
+			\item Cosseno Levantado.
+		\end{itemize}
+		
+		Todos os filtros IIR são transformados do domínio $ S $ para o domínio $ Z $ com uma transformação bilinear\footnote{\textit{Bilinear} \textit{Transform}: https://en.wikipedia.org/wiki/Bilinear\_transform} e o método de correção de dobramento espectral (\textit{aliasing}).
+	
+		O \textit{WinFilter} é composto por uma caixa de diálogo à esquerda, conforme visto na figura \ref{fig-winfilter-window}, e a direita uma série de disposição dos gráficos de resposta do filtro correspondente.
+		
+		\begin{figure}[!ht]
+			\label{fig-winfilter-window}
+			\centering
+			\includegraphics[scale=0.3]{./figuras/winfilterwindow.png}
+			\caption{Aparência do Programa WinFilter - versão 0.8 de  06-08-2004}
+		\end{figure}
+	
+		Como pode ser observado, há também botões para que seja aumentado ou atenuado alguns parâmetros do filtro, tais como taxa de amostragem, frequência de corte 1, frequência de corte 2, ordem do filtro dentro outros. O botão "\textbf{Calculate}" pega os parâmetros selecionados e os mostram através do do display de gráficos à direita do programa.
+		
+		A reposta em frequência, fase e grupo de delay são calculados. Os zeros e polos são plotados no plano Z. A resposta do filtro ao impulso unitário também é mostrada. 
+		
+		Uma importante ferramente é que você pode avaliar nos gráficos a direita com o cursor do mouse os valores do gráfico em determinado ponto espeficicamente, conforme visto na figura \ref{fig-winfilter-window2}:
+		
+		\begin{figure}[!ht]
+			\label{fig-winfilter-window2}
+			\centering
+			\includegraphics[scale=1]{./figuras/cursor.png}
+			\caption{Valor lido no gráfico por meio do cursor do mouse. $ 4ms - 0.854 $}
+		\end{figure}
+	
+		No menu \textit{Output} (figura \ref{fig-winfilter-window3})o programa permite que o código na linguagem C pode ser gerados bem como os gráficos ora mostrados na região à direita do programa também possam ser exportados em um \textit{Graphic Interchange Format} - GIF. Além disso pode ser exportado o código gerado via VHDL em dois modelos (figura \ref{fig-winfilter-window4}): Sized ou Speed Optimized (modo de velocidade otimizada). Ambos os modos conseguem velocidades acima de 160 Mhz num dispositivo, por exemplo, modelo Ep1c3t144 Ciclone (grade-4) FPGA
+		
+		\begin{figure}[!ht]
+			\subfigure[Opções de exportação do Programa]{
+			\label{fig-winfilter-window3}
+			\centering
+			\includegraphics[scale=1]{./figuras/output.png}
+		}
+			\qquad
+			\subfigure[Opções VHDL]{
+			\label{fig-winfilter-window4}
+			\centering
+			\includegraphics[scale=1]{./figuras/VHDLparam.png}
+		}
+			\caption{Menu Output - programa WinFilter}
+		\end{figure}
+		
+		
+
+
+
+
+
