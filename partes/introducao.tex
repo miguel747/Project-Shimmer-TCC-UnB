@@ -34,7 +34,7 @@
 		
 	\subsection{Tipos de Reverb}
 	
-		Falando sob o aspecto musical e industrial de equipamentos que realizam o processamento e simulação de efeitos de repetição (tal como o reverb, delay) termos no mercado diversos tipos de \textit{reverb`s}, os quais possuem diferentes aplicações que veremos a seguir:
+		Efeitos de \textit{reverb} são alcançados pela utilização de uma série complexa de \textit{delays} de um mesmo sinal que diminuem em amplitude e clareza de modo a simular o comportamento acústico de um espaço real. Falando sob o aspecto musical e industrial de equipamentos que realizam o processamento e simulação de efeitos de repetição (tal como o reverb, delay) termos no mercado diversos tipos de \textit{reverb`s}, os quais possuem diferentes aplicações que veremos a seguir:
 		
 		\begin{itemize}
 			\item \textbf{Spring} ("Reverb-de-mola") - O efeito de reverberação com mola é um método que foi primeiramente proposto por \textit{Hammond} em 1940s. O reverb de mola foi criado naturalmente, por um sistema mecânico, o qual usa um transdutor e um captador nas extremidades de uma mola, para criar e capturar vibrações dentro dela. Muitos amplificadores de guitarra incluem esse tipo de reverberação dentro de seus projetos. Existem ainda muitos pedais de reverb que oferecem esse efeito emulado digitalmente e apenas algumas companhias, por questões de custo de construção, também lançaram produtos com um sistema real de reverb de molas.
@@ -65,7 +65,39 @@
 			Diferente dos demais reverbs, o Shimmer é um efeito eminentemente sintetizado, ou seja, produzido digitalmente por meio de algoritmos embarcados em DSP`s e comercializados como equipamentos de produção digital.
 			
 		\end{itemize}
+	
+	\subsection{Pitch Shifting}
+	
+		\subsubsection{Conceitos Inicias}
 		
+			Entre os efeitos digitais de áudio (especialmente os realizados em tempo real), esse é um dos que exige algoritmos mais sofisticados, e até recentemente, os resultados não eram convincentes. 
+			
+			A primeira consideração a ser feita sobre esse assunto seria entender o que é um \textit{pitch shifting}. A melhor definição para o termo "pitch"de um som seria o conjunto de frequências de que o som é formado. A melhor maneira de entender esta definição é olhar por exemplo um coral. Nele há tanto mulheres quanto homens cantando mas as mulheres tem um "alcance"/pitch mais alto que o homem. A mudança das frequências masculinas, por exemplo, para frequências mais altas, o faria
+			parecer como uma voz feminina.
+			
+			O efeito funciona comprimindo e, posteriormente expandindo o sinal que está sendo processado. A grosso modo, para transpor um som uma frequência mais acima, o sinal é tocado mais rápido, o que o torna mais curto. Então é preciso copiar segmentos do sinal processado e adicioná-lo ao sinal resultante para eliminar essa diferença temporal. 
+			
+			Para tornar um som mais grave, o sinal é reproduzido mais lentamente, o que requer o corte de algumas seções do sinal para diminuir sua duração. Ou seja, \textit{pitch shifters} estão constantemente cortando ou colando pequenas porções do áudio a ser processado.
+			
+		\subsubsection{Escala de Frequência Musical - \textit{Pitch Shift}}
+			É sabido que a escala musical é dividida em várias oitavas. Cada oitava é composta por 12 (doze) semitons, também são referenciados como meio salto.
+			
+			Cada nota corresponde a uma frequência fundamental que a compõe. Essa frequência é definida pela equação \ref{eq-escala01}, onde $ p $ corresponde ao número de semitons e $ f $ a frequência em Hertz.
+			
+			\begin{equation}
+				\label{eq-escala01}
+				p = 69 + 12.\log(f/440)
+				\caption{Equação que relaciona os semitons com a frequência fundamental}
+			\end{equation}
+			
+			Sob a óptica de sinais e sistemas, um pitch shifting consiste em deslocar a frequência fundamental e suas harmônicas por um fator específico, conforme mostrado na equação (). A equação consiste na obtenção da frequência final $f_{final}$ dado a frequência inicial $ f_{inicial} $, e os números de semitons "$ s $" os quais pretende deslocar.
+			
+			\begin{equation}
+				\label{eq-escala02}
+				f_{final} = 2^{(s/12)}.f_{inicial}
+			\end{equation}
+			
+			Como já mencionado, existem 12 semitons por oitava. Isso implica que cada transposição para cima ou para baixo uma oitava é equivalente na escala do espectro a multiplicar por 2 ou 1/2 respectivamente. A figura () ilustra as componentes de frequência (com um fator de $2^{(4/12)}$) o qual equivale a um \textit{pitch shift} de 4 semitons acima (de C para E).
 						
 \section{Comparativo entre soluções de Hardware}
 		
