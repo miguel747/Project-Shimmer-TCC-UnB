@@ -89,6 +89,157 @@
 		
 \section{Bloco 2 - Implementando o \textit{Pitch-Shifter}}
 
+	\subsection{Análise do Algoritmo}
+		\subsubsection{Conceito Preliminar - O que é necessário implementar?}
+			
+			Nós sabemos que o objetivo agora nesse bloco é alterar a frequência do sinal sem alterar sua duração. Uma forma que aparentemente funcionaria é que: se gravarmos um som e então faz-lo tocar duas vezes mais rápido, então a frequência desse sinal seria dobrada e então deslocada a frente 1 oitava. Isso está correto, no entanto o sinal é \textbf{duas vezes também mais curto}.
+			
+			A maneira de fazer isso corretamente é pegar o som gravado, dobra-lo de tamanho sem afetar sua frequência natural e então toca-lo duas vezes mais rápido, logo todas as frequências dobrariam de valor e então, devidamente deslocadas, bem como a duração do sinal nesse caso estaria mantida conforme o som original. O algoritmo do MATLAB, nesse caso se baseia nesse princípio. O que será explicado na próxima seção.
+			
+		\subsubsection{Implementação do Algoritmo}
+			\paragraph{Visão Geral}		
+				
+				Um fato de escala já visto na seção \ref{introd-pitch-shift} mostra que um fator de escala é definido como um fator usado para expandir ou comprimir o espectro para ajustar as frequências do sinal de modo que esse deslocamento seja corretamente ajustado. Uma vez feito isso, nós poderemos reconstruir o sinal e voltar a sua duração inicial com o efeito \textit{pitch-shifting} realizado.
+				
+				De fato, se queremos deslocar o sinal um semitom, será preciso utilizar um fator de escala igual a $2^{1/12}$ o qual corresponde a $1.0594$. Isto é, precisamos esticar o sinal sem alterar seu espectro de frequência a qual a duração é agora multiplicado por $1.0594$. Uma vez feito isso, somente será preciso tocar o sinal 1.0594 vezes mais rápido.
+				
+				Uma das etapas de implementação do algoritmo é a separação do sinal original em uma grande quantidade de \textit{frames} (pedaços). Esses \textit{frames} são obtidos do sinal original os quais são "sobrepostos" uns com os outros por um fator de 75\% de sobreposição. Esse \textit{frames} estarão então espaçados dependendo se o sinal, no processamento, será esticado ou comprimido no tempo na sua saída.
+				
+				\begin{figure}
+					conteúdo...
+				\end{figure}
+				
+				No entanto, a medida que essa operação é realizada teremos um problema muito comum, pois o espaço dos frames são feitos em determinados trechos do sinal inadvertidamente. Nesse caso, é criado descontinuidades. Isso é mostrado na figura que mostra os espaços entre os frames é dado como tamanho $ x $ e torna-lo tamanho $ y $.
+				
+				\begin{figure}
+					
+				\end{figure}  
+				
+				Esse procedimento produz "defeitos" no som (espaços indesejados) que são perceptíveis ao ouvido humano. Desse modo é preciso de alguma forma fazer essa descontinuidade desaparecer. Por conta disso precisamos de uma técnica de processamento denominada de \textit{phase vocoder}.
+				
+			\paragraph{\textit{Phase Vocoder}}
+				
+				O \textit{phase vocoder} é uma variação na Transformada Rápida de Fourier (FFT) que usa informações de fase para melhorar as estimativas de frequência \cite{Sethares}. É ideal para uso em aplicações como o alongamento  ou a compressão de tempo de áudio, embora existam vários outros efeitos especiais que podem ser implementados usando a estratégia de \textit{phase vocoder}.
+				
+				Além disso, o \textit{phase vocoder} é geralmente apresentado como uma solução de alta qualidade para a modificação da escala de tempo (ou frequências), o pitch-shift é geralmente implementado como uma combinação de escala de tempo e conversão da taxa de amostragem \cite{Laroche1999}.
+				
+				A figura \ref{fig-phase-vocoder-introd} mostra como um algoritmo phase vocoder funciona tanto de maneira geral (figura \ref{fig-phase-vocoder-introd-B}), tal como com a implementação do algoritmo escrito em MATLAB (figura \ref{fig-phase-vocoder-introd-A}). Ele basicamente consiste em 3 (três) estágios: \underline{análise}, \underline{processamento} e \underline{síntese} \cite{Portnoff1976}. 
+				
+				\begin{figure}[ht!]
+					\centering
+					\subfigure[Ilustração Específica das Etapas do algoritmo do \textit{phase-vocoder}]{\includegraphics[scale=0.5]{./figuras/phase-vocoder-01.PNG}
+					\label{fig-phase-vocoder-introd-A}
+					}
+					\qquad
+					\subfigure[Ilustração Geral da Etapa do algoritmo \textit{phase-vocoder}]{\includegraphics[scale=0.5]{./figuras/phase-vocoder-04.PNG}
+					\label{fig-phase-vocoder-introd-B}
+					}
+					\caption{Etapas do algoritmo do \textit{phase-vocoder}}
+					\label{fig-phase-vocoder-introd}
+				\end{figure}
+					
+				\subparagraph{Análise:}
+				
+					Como já mencionado nesse trabalho na seção \ref{secao-janelamento} que um janelamento refere-se a falar de um pequeno \textit{frame} de um sinal infinitamente maior (se considerarmos apenas 1 pequena janela comparado a todo o sinal amostrado). O processamento dessa janela no espectro do sinal pode ser minimizada. Em outras palavras, para reduzir o efeito de janelamento do sinal na sua representação no domínio da frequência, é utilizado uma janela do tipo \textit{Hanning} ou \textit{Blackman} de tamanho $ N $. O porquê disso? Bem, de acordo coma  figura \ref{fig-phase-vocoder01}, uma multiplicação de uma janela retangular no domínio do tempo com o sinal é equivalente a uma convolução de no domínio da frequência. Desse moro a janela retangular possui mais energia nos lóbulos laterais em comparação aos demais janelamentos, enquanto a janela \textit{Hanning} ou \textit{Blackman} tem um foco de concentração de sua energia espectral no seu lóbulo principal, ou seja, perto do nível DC do sinal.
+					
+					\begin{figure}[!ht]
+						\centering
+						\includegraphics[scale=0.5]{./figuras/phase-vocoder-02.PNG}
+						\caption{Janelamentos}
+						\label{fig-phase-vocoder01}
+					\end{figure}
+					
+					Esse frame é, o qual é formado por $ N $ amostras, é então transformado através de uma Transformada Rápida de Fourier - \textit{Fast Fourier Transform} (FFT) conforme a equação \ref{eq-phase-vocoder01}
+					
+					\begin{equation}
+						(X_a[k])_i = \sum_{n=0}^{N-1}x[n+i.(hop_a)]w[n]e^{-j(\frac{2\pi kn}{N})}
+						\qquad k = 0,1,2,...,N_1
+						\label{eq-phase-vocoder01}
+					\end{equation}
+					
+					Na equação acima, $ x[n] $ é a amostra do sinal, $ w[n] $ representa o janelamento $ Hanning $ ou $ BlackMan $ e $ (X_a[k])_i $ representa o espectro discreto do \textit{frame} $ i $. Afim de aumentar a resolução do espectro, as janelas são sobrepostas com um fator de $ 75\% $. O número de amostras entre duas sucessivas janelas é referenciado pelo "número de saltos" entre cada janela -  termo \textit{hop size} ($ hop_a $) e é igual a $ \frac{N}{4} $ de uma sobreposição de $ 75\% $.
+				
+				
+				\subparagraph{Processamento:}
+				
+					Já é sabido que aplicando a FFT num sinal de tamanho $ N $ resulta em $ N $ segmentos espectrais que começam do valor $ 0 $ até o valor $ \frac{(N-1)}{N}f_s $ com um intervalo de $ \frac{f_s}{N} $, onde $ f_s $ é a nossa frequência de amostragem do sinal. Em termos de módulo, um sinal que possua uma frequência intermediária entre os dois segmentos espectrais terá seu valor não computado e a energia contida nessa frequência, distribuída entre os dois segmentos vizinhos. A informação de fase do sinal é usado para melhorar a acurácia do estimado dessas frequências entre cada segmento espectral. A figura \ref{fig-phase-vocoder02} mostra duas ondas senoidais com uma pequena diferença em valores de frequência. Conforme o método, os frames do sinal são divididos dentro das $ N $ amostras. As janelas nesse caso não estão sobrepostas para facilitar a explicação. O primeiro sinal tem a frequência de $ \frac{f_s}{N} $ e ela, de fato, cai exatamente na primeira frequência do primeiro segmento espectral. A segunda senoide, por sua vez, tem uma frequência levemente maior que o primeiro sinal. Observe que a amostra não está centrado no primeiro segmento, embora sua energia esteja principalmente no dentro dele.
+				
+					\begin{figure}[ht!]
+						\centering
+						\includegraphics[scale=0.5]{./figuras/phase-vocoder-03.PNG}
+						\caption{Ondas senoidais com pequena diferença na frequência e fase.}
+						\label{fig-phase-vocoder02}
+					\end{figure}
+				
+					A informação de fase de dois \textit{frames} sucessivos é significativamente relevante. Pois o primeiro sinal, não há diferença de fases entre os dois frames. Por outro lado, para o segundo sinal, a fase do primeiro segmento é maior que zero. Isso implica que a componente do sinal que correspondente para este segmento é maior que a frequência desse segmento. A diferença de fase entre dois frames é referenciado no código como \textit{phase-shift} $ (\Delta\phi_a[k])_i $ no intervalo de $ -\pi $ a $ \pi $. Sem a sobreposição, a frequência real $ (\omega_{true}[k])_i $ pode ser obtida de um deslocamento de fase $ (\Delta\phi_a[k])_i $ e um intervalo de tempo $ \Delta t_a $ entre dois \textit{frames} conforme visto na equação \ref{eq-phase-vocoder02}. O intervalo de tempo $ \Delta t_a $ é o número de saltos $hop_a$, já visto no págrafo de análise, dividido pela frequência de amostragem $ f_s $.
+					
+					\begin{equation}
+						\label{eq-phase-vocoder02}
+						(\omega_{true}[k])_i = \frac{(\Delta\phi_a[k])_i}{\Delta t_a}
+					\end{equation}
+					
+					A equação supracitada é menos complexa pois trata-se de um sinal não sobreposto. No caso mais complexo, o desvio de frequência para o primeiro segmento é calculado e então sobreposto. Essa quantidade é adicionada ao segmento de frequência para obter a real frequência daquele componente dentro do \textit{frame}. As equações \ref{eq-desvio-frequencia}, \ref{eq-wrapped-frequency} e \ref{eq-true-frequency} ilustram esse procedimento. A variável $(\phi_a[k])_{i-1}$ e $(\phi_a[k])_i$ correspondem a fase do frame anterior e o frame presente respectivamente. Também, $ \omega_{bin}[k] $ corresponde a frequência do segmento, $ (\Delta\omega[k])_i $ o desvio de frequência e $ (\Delta\omega_{wrapped}[k])_i $ corresponde o desvio de frequência sobreposta (\textit{wrap-frequency}).
+					
+					\begin{equation}
+						\label{eq-desvio-frequencia}
+						(\Delta\omega[k])_i = \frac{(\phi_a[k])_i - (\phi_a[k])_{i-1}}{\Delta t_a} - \omega_{bin}[k]
+					\end{equation}
+					
+					\begin{equation}
+						\label{eq-wrapped-frequency}
+						(\Delta\omega_{wrapped}[k])_i = \mod[((\Delta\omega[k])_i+\pi),2\pi]-\pi
+					\end{equation}
+					
+					\begin{equation}
+						\label{eq-true-frequency}
+						(\omega_{true}[k])_i = \omega_{bin}[k] + (\Delta\omega_{wrapped}[k])_i
+					\end{equation}
+					
+					A nova fase de cada fragmento pode ser então calculada adicionando a fase deslocada requerida para assim evitar-se a descontinuidade dos segmentos. Isso é feito multiplicando a frequência real com o intervalo de tempo do estágio de síntese, conforme mostrado na equação \ref{eq-ajuste-da-fase}:
+					
+					\begin{equation}
+						\label{eq-ajuste-da-fase}
+						(\phi_s[k])_i = (\phi_s[k])_{i-1} + \Delta_{t_s} . (\omega_{true}[k])_i
+					\end{equation}
+					
+					A fase do frame anterior, por síntese, já é conhecida desde que ela á foi calculada pelo algoritmo de recursividade. Por fim, o novo espectro é então obtido conforme a equação \ref{eq-amplitude-fase-phase-vocoder}:
+					
+					\begin{equation}
+						\label{eq-amplitude-fase-phase-vocoder}
+						|(X_s[k])_i| = |(X_a[k])_i|
+						\qquad
+						\angle (X_s[k])_i = (\phi_s[k])_i
+					\end{equation}
+					
+				\subparagraph{Síntese:}
+					
+					Agora, como já gerenciado o ajuste de fase no domínio da frequência para as sequências de frames, será preciso agora retornar ao domínio do tempo. Para isso aplicamos a Transformada Inversa Discreta de Fouriter (IDFT) para cada frame do espectro. O resultado é então um janelamento com a janela apropriada (\textit{Hanning} ou \textit{Blackman}) obtendo $ q_i[n] $. O janelamento é usado dessa vez para suavizar o sinal. Esse processo é descrito na equação \ref{eq-sintese-phase-vocoder}:
+					
+					\begin{equation}
+						\label{eq-sintese-phase-vocoder}
+						q_i[n] = \left(\frac{1}{N}\sum_{k=0}^{N-1}(X_s[k])_i e^{-j\frac{2\pi k n}{N}}\right)w[n]
+						\qquad
+						n = 0,1,2,...,N-1
+					\end{equation}
+					
+					Cada \textit{frame} é estão sobreposto conforme mostra a equação \ref{eq-overlap-sintese}. A variável $ L $ corresponde ao número de \textit{frames} e $ u[n] $ representa a função degrau unitário.
+					
+					\begin{equation}
+						\label{eq-overlap-sintese}
+						y[n] = \sum_{i=0}^{L-1} q_i[n-i.hop_s]\{ u[n-i.hop_s]-u[n-i.hop_s-L]\} 
+					\end{equation}
+			
+			\subsubsection{Reamostragem do Sinal}
+				
+				Agora que temos o nosso sinal sem descontinuidades podemos agora estica-lo ou comprimi-lo no tempo e suas componentes de frequências não serão alteradas. Agora, podemos re-amostrar o sinal 	e volta-lo para a duração inicial e então deslocar a sua frequência. Supondo que dado uma taxa de amostragem queremos dobrar a frequência - 1pitch de 1 oitava. A maneira mais fácil de fazer é escolher apenas uma amostra de duas e produzir o resultado. Isso é fácil, porque quando dobramos a frequência, lidamos com um fator de escala que é um número inteiro. Para fatores de escala não inteiros (1 semitom por exemplo - 1.0594) é usado uma interpolação linear para aproximar a amostra que deveria estar naquele local.
+				
+				\begin{figure}[!ht]
+					\centering
+					\includegraphics[scale=0.7]{./figuras/phase-vocoder-05.PNG}
+					\caption{Reamostragem do Sinal utilizando duas vezes o valor da amostra anterior}
+				\end{figure}
+					
+		
 \section{Bloco 3 - Delay Time}
 
 \section{Bloco 5 - Conversão D/A - Comunicação I$^2$C e MCP4725}

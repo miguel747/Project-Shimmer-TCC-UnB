@@ -309,21 +309,21 @@
 			\item Como modelagem básica de representações de redes neurais artificiais.
 		\end{itemize}
 	
-		A equação () representa o modelo de um filtro FIR, em que $W_m(k)$ denota os valores dos coeficientes do filtro em um instante de tempo $k$. 
+		A equação \ref{eq1-filtroadap} representa o modelo de um filtro FIR, em que $W_m(k)$ denota os valores dos coeficientes do filtro em um instante de tempo $k$. 
 		
 		\begin{equation}
 			\label{eq1-filtroadap}
 			y(k) = \sum_{m=0}^{M} W_m(k)x(k-m)
 		\end{equation}
 		
-		A diferença ou erro $e(k)$ entre o valor de padrão desejado $d(k)$ para a a resposta do filtro e a informação da saída atual $y(k)$ do modelo associado é expressa por:
+		A diferença ou erro $e(k)$ entre o valor de padrão desejado $d(k)$ para a a resposta do filtro e a informação da saída atual $y(k)$ do modelo associado é expressa pela equação \ref{eq2-filtroadap}:
 		
 		\begin{equation}
 			\label{eq2-filtroadap}
 			e(k) = d(k)- y(k)
 		\end{equation}
 		
-		Basicamente para ajustar os valores dos coeficientes de um filtro adaptativo tipicamente utiliza o método do gradiente para essa finalidade (fonte....), sendo o critério da somatória do erro quadrático de $\epsilon_(k)$ frequentemente utilizado na etapa de adaptação.
+		Basicamente para ajustar os valores dos coeficientes de um filtro adaptativo tipicamente utiliza o método do gradiente para essa finalidade (----inserir fonte-----), sendo o critério da somatória do erro quadrático de $\epsilon_(k)$ frequentemente utilizado na etapa de adaptação.
 		
 		Vale salientar, que alguns sistemas de comunicação de voz utilizam filtros adaptativos com o objetivo de cancelar ou reduzir ecos ou barulhos do ambiente. Nesse contexto, foi pensado inicialmente a utilização desse modelo de filtro para o projeto. No entanto, será explicado mais a frente a não adoção desse modelo, bem como pela utilização de um filtro FIR típico.
 		
