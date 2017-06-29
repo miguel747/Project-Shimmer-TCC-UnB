@@ -85,8 +85,56 @@
 			Em suma, calculado o tempo de amostragem 
 			
 \section{Bloco 1 - Projetando um Filtro FIR}
-
+	\subsection{Para o código Experimental do MATLAB}
 		
+		Para o código que foi elaborado com o objetivo de análise do efeito \textit{shimmer} e suas limitações em termos da discretização do sinal no domínio do tempo na perspectiva de síntese e análise do sinal.
+		
+		Nesse caso, o filtro escolhido foi um filtro FIR-passa baixa cuja frequência de corte do projeto foi no valor de 2kHz. Tendo esse filtro utilizado a quantidade de 51 \textit{Taps} (tamanho da janela), cujo janelamento foi feito com a janela \textit{Blackman} (equação \ref{eq-proj-fir1}), cujos benefícios já foram explicados anteriormente.
+		
+		\begin{equation}
+			J = 0.42 + 0.5\cos((2\pi t)/Ntaps) + 0.08\cos((4\pi t)/Ntaps);
+			\label{eq-proj-fir1}
+		\end{equation}
+		
+		Com isso bastou-se multiplicar a resposta da janela com um filtro ideal passa-baixa ideal (equação \ref{eq-proj-fir2}), cuja frequência normalizada vale $W_1 = \pi.\left(\frac{2000}{44100/2}\right)$:
+		
+		\begin{equation}
+			h= (W1/pi).sinc((W1/pi)t);
+			\label{eq-proj-fir2}
+		\end{equation}
+		
+		Após a multiplicação basta agora efetuar a operação de convolução com o sinal original de 12 bits resultando num sinal de 12 bits filtrado em $ 2kHz $.
+	
+	\subsection{Para o projeto do $ \mu $C}
+		
+		Com respeito ao projeto do microcontrolador, sabe-se que há uma limitação do próprio hardware em trabalhar com valores em ponto flutuante. Nesse sentido a utilização do software WinFilter foi de suma importância pois ele fornece um vetor de coeficientes do filtro FIR correpondente de acordo com os parâmetros do projeto, algo extremamente prático.
+		
+		Além disso ele fornece uma pequena função que já calcula a convolução das amostras do filtro, no entanto a implementação é ineficiente devido que para cada nova amostra que chega do sinal, ele desloca todas as amostras para então realocar espaço para amostra que chega:
+		
+		\begin{lstlisting}[caption={Código Gerado no WinFilter para um filtro FIR},label={lst:cod-winfilter01},language=C]
+			//shift the old samples
+			for(n=Ntap-1; n>0; n--)
+			x[n] = x[n-1];
+			
+			//Calculate the new output
+			x[0] = NewSample;
+			for(n=0; n<Ntap; n++)
+			y += FIRCoef[n] * x[n];
+			return y / DCgain;
+		\end{lstlisting}
+		
+		Nesse caso, há um desperdício de processamento o qual é solucionado com a implementação de um ponteiro que sempre sobrescreva as amostras antigas assim que ele chegar no fim do vetor (\textit{buffer}) predeterminado para carregar as amostras vindas do conversor A/D. Essa forma é conhecida como \textit{ring-buffer} (buffer em anel - figura \ref{fig-ringbuffer}).
+		
+		\begin{figure}[!ht]
+			\centering
+			\includegraphics[scale=0.5]{./figuras/ringbuffer.png}
+			\caption{Uma pequena ilustração como funciona um \textit{ring-buffer}}
+			\label{fig-ringbuffer}
+		\end{figure}
+		
+		Depois de superada essa parte do processamento a convolução das amostras se dá na segunda parte do código \ref{lst:cod-winfilter01}.
+		
+				
 \section{Bloco 2 - Implementando o \textit{Pitch-Shifter}}
 
 	\subsection{Análise do Algoritmo}
@@ -101,23 +149,37 @@
 				
 				Um fato de escala já visto na seção \ref{introd-pitch-shift} mostra que um fator de escala é definido como um fator usado para expandir ou comprimir o espectro para ajustar as frequências do sinal de modo que esse deslocamento seja corretamente ajustado. Uma vez feito isso, nós poderemos reconstruir o sinal e voltar a sua duração inicial com o efeito \textit{pitch-shifting} realizado.
 				
-				De fato, se queremos deslocar o sinal um semitom, será preciso utilizar um fator de escala igual a $2^{1/12}$ o qual corresponde a $1.0594$. Isto é, precisamos esticar o sinal sem alterar seu espectro de frequência a qual a duração é agora multiplicado por $1.0594$. Uma vez feito isso, somente será preciso tocar o sinal 1.0594 vezes mais rápido.
+				De fato, se queremos deslocar o sinal um semitom, será preciso utilizar um fator de escala igual a $2^{1/12}$ o qual corresponde a $1.0594$ (figura \ref{fig-pitch-shifter-exem01}). Isto é, precisamos esticar o sinal sem alterar seu espectro de frequência a qual a duração é agora multiplicado por $1.0594$. Uma vez feito isso, somente será preciso tocar o sinal 1.0594 vezes mais rápido \cite{Demers2009}.
 				
-				Uma das etapas de implementação do algoritmo é a separação do sinal original em uma grande quantidade de \textit{frames} (pedaços). Esses \textit{frames} são obtidos do sinal original os quais são "sobrepostos" uns com os outros por um fator de 75\% de sobreposição. Esse \textit{frames} estarão então espaçados dependendo se o sinal, no processamento, será esticado ou comprimido no tempo na sua saída.
-				
-				\begin{figure}
-					conteúdo...
+				\begin{figure}[!ht]
+					\centering
+					\includegraphics[scale=0.5]{./figuras/pitch-shifter-exem1.PNG}
+					\caption{Exemplo de arbodagem do \textit{pitch-shifter} - premissa básica para o efeito \textit{shimmer}.}
+					\label{fig-pitch-shifter-exem01}
 				\end{figure}
 				
-				No entanto, a medida que essa operação é realizada teremos um problema muito comum, pois o espaço dos frames são feitos em determinados trechos do sinal inadvertidamente. Nesse caso, é criado descontinuidades. Isso é mostrado na figura que mostra os espaços entre os frames é dado como tamanho $ x $ e torna-lo tamanho $ y $.
+				Uma das etapas de implementação do algoritmo é a separação do sinal original em uma grande quantidade de \textit{frames} (pedaços). Esses \textit{frames} (figura \ref{fig-pitch-shifter-exem02}) são obtidos do sinal original os quais são "sobrepostos" uns com os outros por um fator de 75\% de sobreposição. Esse \textit{frames} estarão então espaçados dependendo se o sinal, no processamento, será esticado ou comprimido no tempo na sua saída.
 				
-				\begin{figure}
-					
-				\end{figure}  
+				\begin{figure}[!ht]
+					\centering
+					\includegraphics[scale=0.5]{./figuras/pitch-shifter-exem1.PNG}
+					\caption{Expansão e compressão do sinal \textit{frame} por \textit{frame}.}
+					\label{fig-pitch-shifter-exem02}
+				\end{figure}
+				
+				No entanto, a medida que essa operação é realizada teremos um problema muito comum, pois o espaço entre os \textit{frames} são feitos em determinados trechos do sinal inadvertidamente. Nesse caso, é criado diversas descontinuidades. Isso é mostrado na figura \ref{fig-pitch-shifter-exem03} que mostra os espaços entre os frames é dado como tamanho $ x $ e torna-lo tamanho $ y $.
+				
+				\begin{figure}[!ht]
+					\centering
+					\includegraphics[scale=0.5]{./figuras/pitch-descont.PNG}
+					\caption{Sinal tornando-se descontínuo quando submetido ao processo de expansão ou compressão no tempo.}
+					\label{fig-pitch-shifter-exem03}
+				\end{figure} 
 				
 				Esse procedimento produz "defeitos" no som (espaços indesejados) que são perceptíveis ao ouvido humano. Desse modo é preciso de alguma forma fazer essa descontinuidade desaparecer. Por conta disso precisamos de uma técnica de processamento denominada de \textit{phase vocoder}.
 				
 			\paragraph{\textit{Phase Vocoder}}
+				\label{parafrafo-phase-vocoder}
 				
 				O \textit{phase vocoder} é uma variação na Transformada Rápida de Fourier (FFT) que usa informações de fase para melhorar as estimativas de frequência \cite{Sethares}. É ideal para uso em aplicações como o alongamento  ou a compressão de tempo de áudio, embora existam vários outros efeitos especiais que podem ser implementados usando a estratégia de \textit{phase vocoder}.
 				

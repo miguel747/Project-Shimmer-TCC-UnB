@@ -253,17 +253,17 @@
 			\[b(n) = J(n).h(n)\]
 			
 			\begin{lstlisting}
-			%% Codigo para calculos dos coeficientes de um filtro FIR
-			N = 51; f1 = 40; fa=200; fn= f1/(fa/2); W1=pi*fn; %parametros e normalizacao
-			n = -(N-1)/2:(N+1)/2; h= (W1/pi)*sinc((W1/pi)*n); %Resposta ideal do FPB
-			%% Funcao Janela
-			J = 0.42 + 0.5*cos(2*pi*n/N) + 0,08*cos(4*pi*n/N); b = J.*h;
-			freqz(b,1,[0:1:100],fa); figure %Reposta em frequencia do filtro
-			t= 0:(1/fa):0.5; x = 2 + 0.1*sin(2*pi*60*t); %Entrada do filtro
-			y = filter(b,1,x); %acao da filtragem;
-			plot(t,x,'k:'); hold
-			stairs(t,y,'k'); hold off
-			xlabel('t[s]'); ylabel('x(t)="..."; y(t)= "___" ');
+				%% Codigo para calculos dos coeficientes de um filtro FIR
+				N = 51; f1 = 40; fa=200; fn= f1/(fa/2); W1=pi*fn; %parametros e normalizacao
+				n = -(N-1)/2:(N+1)/2; h= (W1/pi)*sinc((W1/pi)*n); %Resposta ideal do FPB
+				%% Funcao Janela
+				J = 0.42 + 0.5*cos(2*pi*n/N) + 0,08*cos(4*pi*n/N); b = J.*h;
+				freqz(b,1,[0:1:100],fa); figure %Reposta em frequencia do filtro
+				t= 0:(1/fa):0.5; x = 2 + 0.1*sin(2*pi*60*t); %Entrada do filtro
+				y = filter(b,1,x); %acao da filtragem;
+				plot(t,x,'k:'); hold
+				stairs(t,y,'k'); hold off
+				xlabel('t[s]'); ylabel('x(t)="..."; y(t)= "___" ');
 			\end{lstlisting}
 			
 		\end{exem}
@@ -452,7 +452,7 @@
 \section{Conversão Digital Analógica}
 
 \section{Comunicação Serial I2C}
-	O protocolo $I^2C$ (Inter Integrated Communication ou Comunicação entre Integrados) é um protocolo síncrono half duplex a dois fios do tipo mestre-escravo, criado pela \textit{Philips} com objetivo de facilitar o desenvolvimento de sistemas modulares para televisores e outros aparelhos eletrônicos de consumo geral \cite{bibid}.
+	O protocolo $I^2C$ (Inter Integrated Communication ou Comunicação entre Integrados) é um protocolo síncrono half duplex a dois fios do tipo mestre-escravo, criado pela \textit{Philips} com objetivo de facilitar o desenvolvimento de sistemas modulares para televisores e outros aparelhos eletrônicos de consumo geral \cite{Braga2012}.
 	
 	O funcionamento do protocolo baseia-se em alguns princípios básicos e usa duas linhas bidirecionais:
 	
@@ -481,14 +481,10 @@
 		Normalmente o endereço de 7 \textit{bits} é composto por duas partes: a primeira, de 4 \textit{bits}, especifica o tipo de dispositivo escravo a ser acessado, no nosso caso o endereço do dispositivo MCP 4725. A segunda, de 3 \textit{bits}, especifica um entre até oito dispositivos daquele tipo, o qual poderá ser acessado.
 		
 		
-		
-	
-	
-	
 \section{Ferramentas Computacionais}
 
 	\subsection{\textit{Code Compose Studio}}
-	
+		
 	\subsection{\textit{WinFilter}}
 	
 		O \textit{WinFilter} é uma ferramenta de \textit{software} criada com o objetivo de provê a realização de projetos de filtros digitais. Ele possui uma interface gráfica bastante simples e bem intuitiva \cite{Kundert2004}. Esse \textit{software} pode facilmente projetar filtros IIR, bem como filtros FIR e ainda pode gerar códigos do projeto em linguagem C e também em código VHDL. Os modelos de filtro digitais, no entanto, são limitados a apenas esses modelos abaixo:
