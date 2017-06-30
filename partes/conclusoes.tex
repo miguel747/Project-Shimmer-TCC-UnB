@@ -1,13 +1,15 @@
 \chapter{Conclusões}
 
+	Neste trabalho foi proposto o estudo e implementação, em \textit{software}, do efeito ressonante seletivo em frequência denominado \textit{Reverb-Shimmer}, bem como sua possível implementação no microcontrolador MSP430F5529 da Texas $\text{Instruments}^{TM}$. A performance do código e seu resultado perante a qualidade de áudio apresentado foram objetos cruciais dentro desse trabalho. No outro viés, foram feitos estudos prévios e pequenas implementações da performance do microcontrolador nas etapas de conversão Analógica Digital e Digital Analógica, em face da realidade de possível embarcamento do código ora implementado no software \MATLAB.
+
  			
 	\section{Realização do Projeto}
 	\label{realizacao-projeto}
 		O projeto foi executado dentro das limitações impostas de hardware do uC MSP430F5529LP no quesito de seu desempenho de conversão digital analógica, bem como suas interrupções, período de amostragem bem como sua integração com o conversor Digital-Analógico MCP4725 através da interface $ I^2C $.
 		
-		Não foram avaliados, no entanto, o desempenho do dispositivo na aplicação dos filtros digitais e o modelo ora projetado no \textit{software} Matlab que demonstrou o efeito de \textit{reverb-shimmer} em si. Muito embora, essa parte do projeto estivesse dentro do escopo inicial do trabalho, a sua realização se daria com melhores resultados com a utilização de um DSP específico para esta aplicação, nesse caso a utilização do TMS320F2837xS $\text{Delfino}^{TM}$.
+		Não foram avaliados, no entanto, o desempenho do dispositivo na aplicação dos filtros digitais e o modelo ora projetado no \textit{software} \MATLAB que demonstrou o efeito de \textit{reverb-shimmer} em si. Muito embora, essa parte do projeto estivesse dentro do escopo inicial do trabalho, a sua realização se daria com melhores resultados com a utilização de um DSP específico para esta aplicação, nesse caso a utilização do TMS320F2837xS $\text{Delfino}^{TM}$.
 		
-		Foram constatados que o efeito \textit{reverb-shimmer} possui uma grande complexidade em termos de estabilidade, pois, conforme observado nas simulações, a malha de realimentação com o bloco de \textit{delay`s} aleatórios podem deixar o sistema instável e com isso efeitos indesejados no resultado final.
+		Foram constatados que o efeito \textit{reverb-shimmer} possui uma grande complexidade em termos de estabilidade, pois, conforme observado nas simulações, a malha de realimentação com o bloco de \textit{delay`s} aleatórios podem deixar o sistema instável e com isso efeitos indesejados no resultado final. Além disso, as operações para obtenção do efeito seletivo em frequência \textit{pitch-shifter}, conforme explicado em detalhes na seção \ref{parafrafo-phase-vocoder} são necessárias diversas etapas de síntese e processamento do sinal, por vezes, manipulando valores em ponto flutuante, realizando operações de transformada direta e inversa de \textit{Fourier}, o qual o referido dispositivo não suporta.
 		
 		Dentro dessa realidade podemos dizer que o objetivo do trabalho foi alcançado com respeito ao entendimento claro do modelo matemático e suas implicações na escolha de se projetar um efeito seletivo em frequência, entender suas limitações dentro do contexto de filtros digitais, seu critério de estabilidade e consubstanciar elementos necessários para que seja aplicado dentro de um contexto de projeto de \textit{hardware}.
 	
@@ -24,4 +26,21 @@
 		Diante disso foi necessário concluir o trabalho apenas entendendo as limitações de hardware e escolhendo seus parâmetros baseado nos conceitos de processamento digitais de sinais e não apenas em testes cegos de desempenho. Por outro lado, não se avaliou o desempenho com os códigos ora projetados no MATLAB para o uC em questão, mesmo este sendo o modelo mais modesto.
 		
 	\section{Modelos para Trabalhos Futuros}
+		 
+		 Como sugestões para continuação tanto do estudo do efeito ressonante e seletivo em frequência \textit{reverb-shimmer} bem como sua implementação em algum microcontrolador ou DSP, podemos elencar os pontos que podem ser abordados:
+		 
+		 \begin{enumerate}
+		 	\item Estudo de utilização de outro modelo de implementação de \textit{reverb} na cadeia de realimentação do modelo do \textit{comb-filter}, tais como o \textit{Schroeder’s Reverberator} ou \textit{Moorer’s Reverberator} \cite{Reiss2014} que possuem mais opções de ajustes do efeito do que o \textit{reverb} de Convolução.
+		 	
+		 	\item No caso desse presente trabalho a principal sugestão é no quesito da implementação do efeito reverb-shimmer num microcontrolador para que seja avaliado seu desempenho em tempo de execução. Outro detalhe é realizar os testes em linguagem C com o código que implementa o efeito seletivo em frequência \textit{pitch-shifter} e seu desempenho em sistemas embarcados. Vale considerar que foi concluída a limitação de hardware do MSP430F5529 para a realização desse projeto, por razões já elencadas neste trabalho, no entanto, a utilização de outro microcontrolador mais robusto a exemplo fo \textit{TMS320-Delfino} ou até mesmo o \textit{dsPIC33 Digital Signal Controller}.
+		 	
+		 	\item Além do itens anteriores e não menos importante, é a elaboração de uma robusta documentação para disponibilização do código para qualquer projeto de sistemas microprocessados principalmente aplicados aos mais populares DSP's do mercado.
+		 \end{enumerate}
+		 
+		 
+		 
+		 
+		 
+		
+		
 	

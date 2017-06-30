@@ -30,22 +30,25 @@
 			\caption{Dados relativos as simulações no computador}
 			\label{tab-exp01}
 		\end{table}
+	
+		Outro experimento foi a realização de testes com o conversor ADC12 do microcontrolador MSP430F5529 e também do módulo de conversão digital-analógico MCP4725 de 12 bits. Os dados utilizados foram o seguinte:
+		
+		
 		
 		
 		Esses resultados das figuras  são apenas a título de informações preliminares na escolha da resolução adequada para que o sinal seja tratado posteriormente no microcontrolador. Nesse caso, posto que o conversor em questão seja de 12 (doze) \textit{bits} percebe-se que não há uma perda significativa na resolução do sinal, bem como audivelmente não se percebeu grande perda de qualidade em relação ao áudio original em 16 \textit{bits}.
 		
 		\begin{figure}[!ht]
-			\label{fig-exp2}
 			\centering
-			\includegraphics[scale=0.5]{./figuras/simulacoes/resolucao-audios/12-8-4-normal.png}
-			\caption{Quantização do sinal de áudio em 12, 8 e 4 bits PCM}
-		\end{figure}
-		
-		\begin{figure}[!ht]
-			\label{fig-exp1}
-			\centering
-			\includegraphics[scale=0.5]{./figuras/simulacoes/resolucao-audios/10-12-16-normal.png}
-			\caption{Quantização do sinal de áudio em 10, 12 e 16 bits PCM}
+			\subfigure[Quantização do sinal de áudio em 12, 8 e 4 bits PCM]{
+				\label{fig-exp2}
+				\includegraphics[scale=0.5]{./figuras/simulacoes/resolucao-audios/12-8-4-normal.png}	
+			}
+			\qquad
+			\subfigure[Quantização do sinal de áudio em 10, 12 e 16 bits PCM]{
+				\label{fig-exp1}
+				\includegraphics[scale=0.4]{./figuras/simulacoes/resolucao-audios/10-12-16-normal.png}	
+			}
 		\end{figure}
 	
 		\begin{figure}[!ht]
@@ -60,7 +63,7 @@
 		
 		A seguir temos nas figuras \ref{fig:impulse-reverb} e \ref{fig:warhouse-impulse-reverb} os áudios para serem utilizados no processo de convolução com o sinal original, originando o efeito de reverb em convolução.
 		
-		\begin{figure}[th]
+		\begin{figure}[!ht]
 			\centering
 			\subfigure[Espectro de frequência de uma resposta impulsional de um som oriundo do Palácio de \textit{Falkland Palace in Fife}.]{
 			\includegraphics[width=0.7\linewidth]{figuras/simulacoes/impulse-reverb}
@@ -82,7 +85,28 @@
 			\caption{Espectro de frequência do sinal original 12 bits e o sinal filtrado pelo filtro casual FIR.}
 			\label{fig-sinal12bits-filtrado}
 		\end{figure}
+	
+		Agora segue os resultados aplicando o algoritmo do \textit{pitch-shifter} no sinal filtrado de 12 bits.
 		
+		\begin{figure}[!ht]
+			\centering
+			\subfigure[Análise espectral de um áudio de guitarra tocando um acorde dedilhado. Pitch-shifter utilizando deslocamento de 1 oitava.]{
+				\includegraphics[scale=0.5]{./figuras/simulacoes/12bits-pitch-shift.png}
+				\label{fig-nota-la-02}
+			}
+			\qquad
+			\subfigure[Espectro de frequência do sinal original 12 bits, do pitch-shifter com deslocamento de 1 oitava, e o efeito shimmer.]{
+				\includegraphics[scale=0.5]{figuras/simulacoes/12bits-pitch-shimmer}
+				\label{fig:12bits-pitch-shimmer}
+			}
+		\end{figure}
+	
+		Finalmente o espectro dos sinais: original 12 bits, do pitch-shifter e do aúdio com o efeito shimmer.
+		
+		\begin{figure}[!ht]
+			\centering
+			
+		\end{figure}
 		
 		\section{Análise dos Resultados}
 			
@@ -99,10 +123,36 @@
 				
 				Não obstante, analisando o mesmo efeito só que agora com diversas notas tocadas (figura \ref{fig-nota-la-02}) ao mesmo tempo (harmonia) percebemos que o efeito tem certas diferenças em termos de amostragem das frequências que foram deslocadas do sinal. Isso é facilmente explicado e já mencionado no parágrafo \ref{parafrafo-phase-vocoder} da seção que fala sobre \textit{phase-vocoder}, que diz que a energia das frequências ora existentes entre dois segmentos de frequências (\textit{bins}) consecutivos, terá seu valor distribuído entre esses dois segmentos.
 				
-				\begin{figure}[!ht]
-					\centering
-					\includegraphics[scale=0.5]{./figuras/simulacoes/12bits-pitch-shift.png}
-					\caption{Análise espectral de um áudio de guitarra tocando um acorde dedilhado. Pitch-shifter utilizando deslocamento de 1 oitava.}
-					\label{fig-nota-la-02}
-				\end{figure}
+				Foi também testado diferentes valores de espaçamentos entre os \textit{frames} com fatores menores de 75\% de preenchimento, os quais apresentaram muito ruins em termos de qualidade no som. Em outra linha, e para o exemplo ora apresentado neste trabalho, foi considerado um overlap muito menor do que 25\%, bem como um janelamento bem maior que 1024 amostras.
+				
+			
+			\subsection{Desempenho do DAC-MCP4725}
+				 
+				 Bem, o módulo MCP4725 foi testado de diferentes maneiras. A primeira e mais simples foi aplicar um sinal constante $ DC $ o qual era lido pelo conversor DAC e enviado a um multímetro. Foram colocados os valores de $ 0 - (0V) $, $ 2048 - (2.5V) $ e $ 4095 - (5V) $.
+				 Outro teste mais elaborado foi avaliar a saída do MCP4725 submetido a um trem de valores lineares que variassem de 0 até 4095. Como vocês podem notar o conversor DAC obteve valores muito satisfatórios.
+				 
+				 \begin{figure}[!ht]
+				 	\centering
+				 	\subfigure[Valor da amostra igual 0.]{\includegraphics[scale=0.3]{figuras/micro/dac-sinal-dc}
+				 		\label{fig:dac-sinal-dc}
+			 		}
+		 			\qquad
+				 	
+				 	\subfigure[Valor da amostra igual a 1024]{	\includegraphics[scale=0.3]{figuras/micro/unnamed}
+				 		\label{fig:unnamed}
+			 		}
+		 			\caption{Teste de valores DC através de software e transmitidos através da interface I$^2$C do MSP430 e lida por meio de um multímetro nos terminais do DAC MCP4725.}
+				 \end{figure}
+			 
+			 	\begin{figure}[!ht]
+			 		\centering
+			 		\includegraphics[scale=0.5]{./figuras/simulacoes/mcp4725.PNG}
+			 		\caption{Teste com um vetor de valores lineares avaliados entre 0 até 4095.}
+			 		\label{fig-mcp4725}
+			 	\end{figure}
+				 
+				 
+				 
+				
+				
 			

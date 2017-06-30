@@ -6,7 +6,15 @@
 	
 		Antes do sinal chegar ao microcontrolador para o correto processamento do sinal de áudio, será necessário, conforme já relatamos, amostrar esse sinal através de valores corretamente quantizados. Para isso, conforme abordado na seção \ref{secao-conv-analogica-digital} deste trabalho, é necessário utilizar um Conversor Analógico Digital - ADC.
 		
-		O modelo do MSP 430 em questão (MSP430F5529LP) possui um ADC interno de 12 (doze) bits (ADC12). Ou seja, é possível representar em níveis de pulso até 4096 níveis. Algumas características podemos listar pois será objeto de avaliação dentro do projeto \cite{Davies2008}.
+		O modelo do MSP 430 em questão (MSP430F5529LP - figura \ref{fig:main}) possui um ADC interno de 12 (doze) bits (ADC12). Ou seja, é possível representar em níveis de pulso até 4096 níveis. Algumas características podemos listar pois será objeto de avaliação dentro do projeto \cite{Davies2008}.
+		
+		\begin{figure}[th]
+			\centering
+			\includegraphics[scale=0.5]{figuras/micro/main}
+			\caption{Microcontrolador - modelo MSP430F5529LP}
+			\label{fig:main}
+		\end{figure}
+		
 		
 		\begin{itemize}
 			\item Resolução de 12 bits monotônica, sem perdas de código;
@@ -82,7 +90,23 @@
 			
 			Por conseguinte, com SHP = 1 temos o modo de amostragem temporizada. O tempo de amostragem será determinado por um \textit{timer} interno, que é configurado de acordo com os bits SHT1x e SHT0x (registrador ADC12CTL0). Os \textit{bits} SHT1x determinam o tempo de amostragem (em ciclos de clock do conversor) para as memórias ADC12MEM8 até ADC12MEM15, tal como os \textit{bits} SHT0x determinam o tempo de amostragem para as memórias ADC12MEM0 até ADC12MEM7.
 			
-			Em suma, calculado o tempo de amostragem 
+			Ora, calculado o tempo de amostragem do conversor ADC12, temos agora, conforme visto no \textit{user's guide}, contar ainda 13 (treze) batidas de \textit{clock} do conversor AD, ou seja, deve-se esperar um total de:
+			
+			\begin{equation}
+				t_{ADC12} = t_{sample} + t_{sync} + 13.\underbrace{ADC12CLK}_{\frac{1}{3~5Mhz}}
+				\label{eq-adc12-tempo}
+			\end{equation}
+			
+			Esse período descrito na equação \ref{eq-adc12-tempo} precisa ser consideravelmente menor que o período da taxa de amostragem do sinal e, que será sincronizado com a interrupção do TIMER$_A$ que, conforme já estipulamos, é igual a $ TA = \frac{1}{22050 Hz} = 45,35\mu s $.
+			
+			De fato, considerando que a resistência da guitarra (fonte de aúdio de entrada) $ R_S = 1k\Omega $ o valor da taxa de amostragem do conversor ADC12 é igual a:
+			
+			\[t_{sample} > 2800.13.\ln 2 . 25. 10^{-2} + 800ns\Rightarrow \boxed{t_{sample} > 1.43076\mu s}\]
+			
+			O valor das 13 batidas de clock, considerando a velocidade normal do clock do conversor ADC12 entre $ 3~5Mhz $ temos um valor próximo de $ 3.33 \mu s $.
+			
+			Concluímos, pelo menos teoricamente, que o conversor ADC12 não é um fator limitante em termos de consumir de forma demasiada o tempo de conversão das amostras oriundas de um instrumento musical.
+									
 			
 \section{Bloco 1 - Projetando um Filtro FIR}
 	\subsection{Para o código Experimental do MATLAB}
@@ -105,7 +129,7 @@
 		
 		Após a multiplicação basta agora efetuar a operação de convolução com o sinal original de 12 bits resultando num sinal de 12 bits filtrado em $ 2kHz $.
 	
-	\subsection{Para o projeto do $ \mu $C}
+	\subsection{Para o projeto do MSP430}
 		
 		Com respeito ao projeto do microcontrolador, sabe-se que há uma limitação do próprio hardware em trabalhar com valores em ponto flutuante. Nesse sentido a utilização do software WinFilter foi de suma importância pois ele fornece um vetor de coeficientes do filtro FIR correpondente de acordo com os parâmetros do projeto, algo extremamente prático.
 		
@@ -300,6 +324,16 @@
 					\includegraphics[scale=0.7]{./figuras/phase-vocoder-05.PNG}
 					\caption{Reamostragem do Sinal utilizando duas vezes o valor da amostra anterior}
 				\end{figure}
+			
+			\subsubsection{Peformance}
+			
+				Considerando agora a possível implementação no microcontrolador MSP430, deve-se considerar que o tempo de processamento do sinal é cada vez menor, quanto menor for a quantidade de amostras não sobrepostas (overlapping). Por exemplo considerando uma taxa de amostragem de $ 44100 Hz $ podemos considerar que cada frame possui 1024 amostras cada qual é sobrepostas a uma margem de 75\%. Isso implica que cada bloco terá 256 amostras e um novo frame estará pronto para ser processado. Logo o tempo máximo para o processamento de um frame de 1024 amostras é dado por:
+				
+				\begin{equation}
+					t_{process} = \frac{hop_a}{f_s} = \frac{256 \text{amostras}}{44100 \text{amostra/segundo}} = 5,81\,ms
+				\end{equation}
+				
+				Após a fase de análise de dados, bem como o processamento do sinal através da aplicação da FFT nas amostras, vem a fase de síntese que consiste em transformar o banco de frames para o domínio do tempo com a Transformada Inversa de $ Fourier $. 
 					
 		
 \section{Bloco 3 - Delay Time - Reverb em Convolução}
@@ -311,8 +345,12 @@
 		Em outras palavras, podemos dizer que toda e qualquer sala possui uma “impressão digital”, única, característica, que determina como o som se comportará dentro dela. Algumas impressões digitais são bem conhecidas, sendo que a grande maioria das pessoas identifique facilmente se um som foi gravado ou está sendo gerado dentro de um ginásio de esportes, ou de uma catedral, cavernas,  banheiros, salas de concerto, etc.
 		
 		A grande vantagem nesse caso de usar o reverb de convolução é justamente utilizar uma forma de resposta impulsional daquele ambiente e depois "filtrar" (convoluir) o sinal original com essa resposta, muito semelhante ao que é feito com o filtro de resposta finita.
+		
+		Embora a convolução seja uma técnica matemática bastante útil, ela é demasiadamente pesada em termos computacionais. Para uma simulação real de um ambiente natural, é necessário uma resposta ao impulso, no mínimo, de 2 segundos segundo \cite{Reiss2014}. Perceba que para o processamento de uma amostra do sinal com um \textit{reverb} de convolução, as operações de multiplicação e acumulação deve ser avaliadas para todo o tamanho da resposta ao impulso. Tomando nota de um pequeno exemplo: se assumimos um sinal a $ 44.1kHz $ de taxa de amostragem e que a resposta ao impulso tenha apenas 1 segundo de duração, teremos mais ou menos $2*10^9$ adições e multiplicações sendo requeridas \textbf{por segundo}. Não obstante, mesmo dentro dessa realidade há algumas técnicas\footnote{Uma das técnicas chama-se de convolução rápida - \textit{fast convolution}, ou seja, a grosso modo é utilizar a operação de Transformada Rápida de Fourier como base para a operação da Convolução pois exige-se uma ordem menor de operação - \textit{Nlog(N)}} que podem reduzir essa quantidade demasiadamente grande de operações, as quais, infelizmente, não serão aplicadas neste trabalho.
+		
+		
 
-\section{Bloco 5 - Conversão D/A - Comunicação I$^2$C e MCP4725}
+\section{Bloco 4 - Conversão D/A - Comunicação I$^2$C e MCP4725}
 	
 	
 	\subsection{Limitações do MSP430F5529LP}
